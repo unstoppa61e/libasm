@@ -1,0 +1,21 @@
+{
+    // tasks.json 形式の詳細についての資料は、
+    // https://go.microsoft.com/fwlink/?LinkId=733558 をご覧ください
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "c_build",
+            "command": "nasm",
+            "args": [
+				"-fmacho64",
+                "${file}",
+				"ld",
+				"${file}.o",
+				"-lSystem",
+				"${fileDirname}/a.out",
+            ],
+            "group": "build"
+        }
+    ]
+}
