@@ -8,7 +8,6 @@ _ft_strcpy:
 .loop:
 	cmp byte [rsi + rax], 0
 	je	.end
-	; mov	[rdi + rax], [rsi + rax] 
 	mov	cl, [rsi + rax] 
 	mov	[rdi + rax], cl
 	inc rax

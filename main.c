@@ -6,7 +6,7 @@
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/25 11:43:13 by sperrin           #+#    #+#             */
-/*   Updated: 2020/12/23 12:42:19 by monoue           ###   ########.fr       */
+/*   Updated: 2020/12/23 13:43:35 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,91 +24,106 @@ upon thee with great vengeance and furious anger those who\
 attempt to poison and destroy my brothers. And you will know my\
 name is the Lord when I lay my vengeance upon thee."\
 
-int		strlen_test(char *str)
+void	put_color(char *str, char *color)
 {
-	int 	ret1;
-	int 	ret2;
-
-	ret1 = ft_strlen(str);
-	ret2 = strlen(str);
-	if (ret1 == ret2)
-		printf("" GREEN "OK  " RESET "");
-	else
-		printf("" RED "KO  " RESET "");
-	printf("" BLUE "strlen :" RESET" %d "YELLOW"/" RESET" "BLUE "ft_strlen :" RESET"%d \n", ret1, ret2);
-	return (1);
+	printf("%s%s"RESET, color, str);
 }
 
-int		strcpy_test(char *src)
+void	put_ok(void)
+{
+	put_color("OK  ", GREEN);
+}
+
+void	put_ko(void)
+{
+	put_color("KO  ", RED);
+}
+
+void	strlen_test(char *str)
+{
+	const int ret1 = strlen(str);
+	const int ret2 = ft_strlen(str);
+
+	if (ret1 == ret2)
+		put_ok();
+	else
+		put_ko();
+	put_color("strlen: ", BLUE);
+	printf("%d", ret1);
+	put_color(" / ", YELLOW);
+	put_color("ft_strlen: ", BLUE);
+	printf("%d\n", ret2);
+}
+
+void	strcpy_test(char *src)
 {
 	char	dest1[BUFFER_SIZE];
 	char	dest2[BUFFER_SIZE];
 
 	bzero(dest1, BUFFER_SIZE);
 	bzero(dest2, BUFFER_SIZE);
-	ft_strcpy(dest1, src);
-	strcpy(dest2, src);
+	strcpy(dest1, src);
+	ft_strcpy(dest2, src);
 
-	printf("" BLUE "strcpy :" RESET" %s\n"BLUE "ft_strcpy :" RESET"%s", dest1, dest2);
-	if (!strcmp(dest1, dest2))
-		printf("" GREEN "     OK\n\n" RESET "");
+	if (strcmp(dest1, dest2) == 0)
+		put_ok();
 	else
-		printf("" RED "     KO\n" RESET "");
-	return (1);
+		put_ko();
+	put_color("strcpy :", BLUE);
+	printf("%s\n", dest1);
+	put_color(" / ", YELLOW);
+	put_color("ft_strcpy :", BLUE);
+	printf("%s\n", dest2);
 }
 
-// int		strcmp_test(char *s1, char *s2)
-// {
-// 	int 	ret1;
-// 	int 	ret2;
+void	strcmp_test(char *s1, char *s2)
+{
+	const int ret1 = strcmp(s1, s2);
+	const int ret2 = ft_strcmp(s1, s2);
 
-// 	ret1 = strcmp(s1, s2);
-// 	ret2 = ft_strcmp(s1, s2);
-// 	printf("" BLUE "strcmp :" RESET" %d "YELLOW"/" RESET" "BLUE "ft_strcmp :" RESET"%d ", ret1, ret2);
-// 	if ((ret1 > 0 && ret2 > 0) || (ret1 < 0 && ret2 < 0) || (ret1 == 0 && ret2 == 0))
-// 		printf("" GREEN "     OK\n" RESET "");
-// 	else
-// 		printf("" RED "     KO\n" RESET "");
-// 	return (1);
-// }
+	if ((ret1 > 0 && ret2 > 0) || (ret1 < 0 && ret2 < 0) || (ret1 == 0 && ret2 == 0))
+		put_ok();
+	else
+		put_ko();
+	put_color("strcmp :", BLUE);
+	printf("%d\n", ret1);
+	put_color(" / ", YELLOW);
+	put_color("ft_strcmp :", BLUE);
+	printf("%d\n", ret2);
+}
 
-// int		write_test(char *str)
-// {
-// 	int		fd;
-// 	int		fd2;
-// 	int		fd3;
-// 	int		fd4;
+void	write_test(char *str)
+{
+	int	fd[4];
 
-// 	fd = open("ft_write_test.txt", O_WRONLY);
-// 	fd2 = open("write_test.txt", O_WRONLY);
-// 	fd3 = open("wronffiledexcriptor", O_WRONLY);
-// 	fd4 = open("wronffiledexcriptor", O_WRONLY);
+	fd[0] = open("write_test.txt", O_WRONLY);
+	fd[1] = open("ft_write_test.txt", O_WRONLY);
+	fd[2] = open("wronffiledexcriptor", O_WRONLY);
+	fd[3] = open("wronffiledexcriptor", O_WRONLY);
 
-// 	/*
-// 	** STDOUT
-// 	*/
-// 	printf("\n"YELLOW "write" RESET" STDOUT: %zd(return value)\n", write(1, ""RED "hey" RESET"", 12));
-// 	printf("\n"BLUE "ft_write" RESET" STDOUT: %zd(return value)\n\n", ft_write(1, ""RED "hey" RESET"", 12));
+	/*
+	** STDOUT
+	*/
+	printf("\n"YELLOW "write" RESET" STDOUT: %zd(return value)\n", write(1, ""RED "hey" RESET"", 12));
+	printf("\n"BLUE "ft_write" RESET" STDOUT: %zd(return value)\n\n", ft_write(1, ""RED "hey" RESET"", 12));
 
-// 	/*
-// 	** FILE DESCRIPTOR
-// 	*/
-// 	printf("%s\n", str);
-// 	printf(""YELLOW "write" RESET" with an open file descriptor : %zd(return value)\n\n", write(fd2, str, strlen(str)));
-// 	printf("%s\n", str);
-// 	printf(""BLUE "ft_write" RESET" with an open file descriptor : %zd(return value)\n\n", ft_write(fd, str, strlen(str)));
+	/*
+	** FILE DESCRIPTOR
+	*/
+	printf("%s\n", str);
+	put_color("write ", YELLOW);
+	printf("with an open file descriptor : %zd(return value)\n\n", write(fd[1], str, strlen(str)));
+	printf("%s\n", str);
+	printf(""BLUE "ft_write" RESET" with an open file descriptor : %zd(return value)\n\n", ft_write(fd[0], str, strlen(str)));
 
-// 	/*
-// 	** WRONG FILE DESCRIPTOR
-// 	*/
-// 	printf(""YELLOW "write" RESET" with a wrong file descriptor : %zd(return value), errno : %d\n", write(fd3, str, 10), errno);
-// 	printf(""BLUE "ft_write" RESET" with a wrong file descriptor : %zd(return value), errno : %d\n\n", ft_write(fd4, str, 10), errno);
-// 	close(fd);
-// 	close(fd2);
-// 	close(fd3);
-// 	close(fd4);
-// 	return (1);
-// }
+	/*
+	** WRONG FILE DESCRIPTOR
+	*/
+	printf(""YELLOW "write" RESET" with a wrong file descriptor : %zd(return value), errno : %d\n", write(fd[2], str, 10), errno);
+	printf(""BLUE "ft_write" RESET" with a wrong file descriptor : %zd(return value), errno : %d\n\n", ft_write(fd[3], str, 10), errno);
+	for (int i = 0; i < 4; i++)
+		close(fd[i]);
+}
 
 // int		read_test(char *str)
 // {
