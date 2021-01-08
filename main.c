@@ -5,270 +5,280 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/25 11:43:13 by sperrin           #+#    #+#             */
-/*   Updated: 2020/12/23 13:43:35 by monoue           ###   ########.fr       */
+/*   Created: 2020/12/21 20:57:50 by mfunyu            #+#    #+#             */
+/*   Updated: 2021/01/08 12:25:50 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libasm.h"
-#include "test.h"
+#include "main.h"
 
-#define long_string "Well, there’s this passage I got memorised,\
-sorta fits the occasion. Ezekiel 25:17.\
-The path of the righteous man is beset on all sides by the\
-iniquities of the selfish and the tyranny of evil men.\
-Blessed is he who in the name of cherish and good will shepherds\
-the weak through the valley of darkness for he is truly his\
-keeper and the finder of lost children. And I will strike down\
-upon thee with great vengeance and furious anger those who\
-attempt to poison and destroy my brothers. And you will know my\
-name is the Lord when I lay my vengeance upon thee."\
+/*
+** check_functions:
+** 	variadic functions (all very similar)
+** 	after third arguments, accpet parameters to pass to the function
+** 	using va_list, apply all arguments as a parameter to the function
+** 	NULL is used for terminating to read arguments
+*/
 
-void	put_color(char *str, char *color)
-{
-	printf("%s%s"RESET, color, str);
-}
-
-void	put_ok(void)
-{
-	put_color("OK  ", GREEN);
-}
-
-void	put_ko(void)
-{
-	put_color("KO  ", RED);
-}
-
-void	strlen_test(char *str)
-{
-	const int ret1 = strlen(str);
-	const int ret2 = ft_strlen(str);
-
-	if (ret1 == ret2)
-		put_ok();
-	else
-		put_ko();
-	put_color("strlen: ", BLUE);
-	printf("%d", ret1);
-	put_color(" / ", YELLOW);
-	put_color("ft_strlen: ", BLUE);
-	printf("%d\n", ret2);
-}
-
-void	strcpy_test(char *src)
-{
-	char	dest1[BUFFER_SIZE];
-	char	dest2[BUFFER_SIZE];
-
-	bzero(dest1, BUFFER_SIZE);
-	bzero(dest2, BUFFER_SIZE);
-	strcpy(dest1, src);
-	ft_strcpy(dest2, src);
-
-	if (strcmp(dest1, dest2) == 0)
-		put_ok();
-	else
-		put_ko();
-	put_color("strcpy :", BLUE);
-	printf("%s\n", dest1);
-	put_color(" / ", YELLOW);
-	put_color("ft_strcpy :", BLUE);
-	printf("%s\n", dest2);
-}
-
-void	strcmp_test(char *s1, char *s2)
-{
-	const int ret1 = strcmp(s1, s2);
-	const int ret2 = ft_strcmp(s1, s2);
-
-	if ((ret1 > 0 && ret2 > 0) || (ret1 < 0 && ret2 < 0) || (ret1 == 0 && ret2 == 0))
-		put_ok();
-	else
-		put_ko();
-	put_color("strcmp :", BLUE);
-	printf("%d\n", ret1);
-	put_color(" / ", YELLOW);
-	put_color("ft_strcmp :", BLUE);
-	printf("%d\n", ret2);
-}
-
-void	write_test(char *str)
-{
-	int	fd[4];
-
-	fd[0] = open("write_test.txt", O_WRONLY);
-	fd[1] = open("ft_write_test.txt", O_WRONLY);
-	fd[2] = open("wronffiledexcriptor", O_WRONLY);
-	fd[3] = open("wronffiledexcriptor", O_WRONLY);
-
-	/*
-	** STDOUT
-	*/
-	printf("\n"YELLOW "write" RESET" STDOUT: %zd(return value)\n", write(1, ""RED "hey" RESET"", 12));
-	printf("\n"BLUE "ft_write" RESET" STDOUT: %zd(return value)\n\n", ft_write(1, ""RED "hey" RESET"", 12));
-
-	/*
-	** FILE DESCRIPTOR
-	*/
-	printf("%s\n", str);
-	put_color("write ", YELLOW);
-	printf("with an open file descriptor : %zd(return value)\n\n", write(fd[1], str, strlen(str)));
-	printf("%s\n", str);
-	printf(""BLUE "ft_write" RESET" with an open file descriptor : %zd(return value)\n\n", ft_write(fd[0], str, strlen(str)));
-
-	/*
-	** WRONG FILE DESCRIPTOR
-	*/
-	printf(""YELLOW "write" RESET" with a wrong file descriptor : %zd(return value), errno : %d\n", write(fd[2], str, 10), errno);
-	printf(""BLUE "ft_write" RESET" with a wrong file descriptor : %zd(return value), errno : %d\n\n", ft_write(fd[3], str, 10), errno);
-	for (int i = 0; i < 4; i++)
-		close(fd[i]);
-}
-
-// int		read_test(char *str)
+// void	check_read(FILE *fd, ssize_t (*func)(int, void *, size_t), ...)
 // {
-// 	char	buffer[1000];
-// 	char 	buffer2[1000];
+// 	va_list	ap;
+// 	int		testnbr;
+// 	char	*param;
+// 	char	*buff;
 // 	int		ret;
-// 	int		ret2;
-// 	int		fd;
-// 	int		fd2;
-// 	int		fd3;
-// 	int		fd4;
-// 	int		ret3;
-// 	int		ret4;
-// 	int		ret5;
-// 	int		ret6;
-// 	int		ft_read_pipe[2];
-// 	int		ft_read_pipe2[2];
-// 	char	buf[10];
+// 	int		fildes;
+// 	int		byte;
 
-// 	/*
-// 	** STDIN 
-// 	*/
-// 	if (pipe(ft_read_pipe) < 0)
-// 		exit(EXIT_FAILURE);
-// 	fcntl(ft_read_pipe[0], F_SETFL, O_NONBLOCK);
-// 	write(ft_read_pipe[1], str, strlen(str));
-// 	ret = read(ft_read_pipe[0], buf, 10);
-// 	printf(""BLUE "read" RESET" with the stdin : %s : %d(return value)\n", buf, ret);
-
-// 	if (pipe(ft_read_pipe2) < 0)
-// 		exit(EXIT_FAILURE);
-// 	fcntl(ft_read_pipe2[0], F_SETFL, O_NONBLOCK);
-// 	write(ft_read_pipe2[1], str, strlen(str));
-// 	ret2 = ft_read(ft_read_pipe2[0], buf, 10);
-// 	printf(""YELLOW "ft_read" RESET" with the stdin : %s : %d(return value)\n\n", buf, ret2);
-	
-
-// 	/*
-// 	** FILE DESCRIPTOR
-// 	*/
-// 	fd2 = open("write_test.txt", O_RDONLY);
-// 	ret3 = read(fd2, buffer, 50);
-// 	printf(""BLUE "read" RESET" with an open file descriptor : %s : %d(return value)\n", buffer, ret3);
-	
-// 	fd = open("ft_write_test.txt", O_RDONLY);
-// 	ret4 = ft_read(fd, buffer, 50);
-// 	printf(""YELLOW "ft_read" RESET" with an open file descriptor : %s : %d(return value)\n\n", buffer, ret4);
-// 	close(fd);
-// 	close(fd2);
-
-
-// 	/*
-// 	** WRONG FILE DESCRIPTOR
-// 	*/
-// 	fd3 = open("wrongfiledescriptor", O_RDONLY);
-// 	ret5 = read(fd3, buffer2, 50);
-// 	printf(""BLUE "read" RESET" with a wrong file descriptor : %s : %d(return value), errno : %d\n", buffer2, ret5, errno);
-
-// 	fd4 = open("wrongfiledescriptor", O_RDONLY);
-// 	ret6 = ft_read(fd4, buffer2, 50);
-// 	printf(""YELLOW "ft_read" RESET" with a wrong file descriptor : %s : %d(return value), errno : %d\n\n", buffer2, ret6, errno);
-
-	
-// 	close(fd3);
-// 	close(fd4);
-// 	close(ft_read_pipe[1]);
-// 	close(ft_read_pipe[0]);
-// 	close(ft_read_pipe2[1]);
-// 	close(ft_read_pipe2[0]);
-// 	return (1);
+// 	testnbr = 0;
+// 	va_start(ap, func);
+// 	buff = (char *)malloc(40);
+// 	while ((param = va_arg(ap, char *)))
+// 	{
+// 		// open a file
+// 		fildes = open(param, O_RDONLY);
+// 		byte = va_arg(ap, int);
+// 		ret = (*func)(fildes, buff, byte);
+// 		buff[byte] = '\0';
+// 		// check return values
+// 		fprintf(fd, "[read%d]: %d | \"%s\"\n", ++testnbr, ret, buff);
+// 		close(fildes);
+// 	}
+// 	free(buff);
+// 	buff = NULL;
+// 	va_end(ap);
 // }
 
-// int		strdup_test(char *str)
+// void	check_write(FILE *fd, ssize_t (*func)(int, const void *, size_t), ...)
 // {
-// 	char	*str1;
-// 	char	*str2;
+// 	va_list	ap;
+// 	char	*param;
+// 	ssize_t	ret;
+// 	int		testnbr;
 
-// 	str1 = ft_strdup(str);
-// 	str2 = strdup(str);
-// 	printf("" BLUE "strdup :" RESET" %s\n"BLUE "ft_strdup :" RESET"%s", str1, str2);
-// 	if (!strcmp(str1, str2))
-// 		printf("" GREEN "     OK\n\n" RESET "");
-// 	else
-// 		printf("" RED "     KO\n" RESET "");
-// 	free(str1);
-// 	free(str2);
-// 	return (1);
+// 	testnbr = 0;
+// 	va_start(ap, func);
+// 	if (!STDOUT)
+// 		write(fd->_file, "====== write ======\n", 20);
+// 	while ((param = va_arg(ap, char *)))
+// 	{
+// 		// write to each files
+// 		if (!STDOUT)
+// 			write(fd->_file, "[write]: \"", 10);
+// 		else
+// 			write(fd->_file, "\"", 1);
+// 		ret = (*func)(fd->_file, param, strlen(param));
+// 		write(fd->_file, "\"\n", 2);
+// 		// check return values
+// 		fprintf(fd, "[write%d]: %ld\n", ++testnbr, ret);
+// 	}
+// 	va_end(ap);
 // }
 
-int		main(void)
+// void	check_strdup(FILE *fd, char *(*func)(const char *), ...)
+// {
+// 	va_list	ap;
+// 	char	*param;
+// 	char	*dst;
+// 	int		testnbr;
+
+// 	testnbr = 0;
+// 	va_start(ap, func);
+// 	while ((param = va_arg(ap, char *)))
+// 	{
+// 		dst = (*func)(param);
+// 		fprintf(fd, "[strdup%d] %s | input: %s | ", ++testnbr, dst, param);
+// 		// fprintf(fd, "[strdup%d] %s (%p) | input: %s (%p) | ", ++testnbr, dst, dst, param, param);
+// 		if (dst != param)
+// 			fprintf(fd, "ADRS DIFF (%p)\n", param);
+// 		free(dst);
+// 		dst = NULL;
+// 	}
+// 	va_end(ap);
+// }
+
+// void	check_strcmp(FILE *fd, int (*func)(const char *, const char *), ...)
+// {
+// 	va_list	ap;
+// 	char	*s1;
+// 	char	*s2;
+// 	int		testnbr;
+
+// 	testnbr = 0;
+// 	va_start(ap, func);
+// 	while ((s1 = va_arg(ap, char *)))
+// 	{
+// 		s2 = va_arg(ap, char *);
+// 		fprintf(fd, "[strcmp%d] %d | %s, %s\n", ++testnbr, (*func)(s1, s2), s1, s2);
+// 	}
+// 	va_end(ap);
+// }
+
+
+void	check_strcpy(FILE *fd, char *(*func)(char *, const char *), ...)
 {
-	/*
-	** FT_STRLEN
-	*/
-	printf(""PURPLE "ft_strlen.s\n" RESET"");
+	va_list	ap;
+	char	*param;
+	char	*dst;
+	int		testnbr;
 
-	strlen_test("");
-	strlen_test(long_string);
-	printf("\n\n");
+	testnbr = 0;
+	va_start(ap, func);
+	if (!(dst = (char *)calloc(sizeof(char), 30)))
+		exit(EXIT_FAILURE);
+	while ((param = va_arg(ap, char *)))
+	{
+		memset(dst, 'a', 20);
+		fprintf(fd, "[strcpy%d] src = \"%s\" (%p)\n", ++testnbr, param, param);
+		fprintf(fd, "          (before) dst = \"%s\" (%p)\n", dst, dst);
+		(*func)(dst, param);
+		fprintf(fd, "          (after)  dst = \"%s\" (%p)\n", dst, dst);
+	}
+	free(dst);
+	dst = NULL;
+	va_end(ap);
+}
 
-	/*
-	** FT_STRCPY
-	*/
-	printf(""PURPLE "ft_strcpy.s\n" RESET"");
-	
-	strcpy_test("");
-	strcpy_test(long_string);
-	printf("\n\n");
+void	check_strlen(FILE *fd, size_t (*func)(const char *), ...)
+{
+	va_list	ap;
+	char	*param;
+	int		testnbr;
 
-	/*
-	** FT_STRCMP
-	*/
-	// printf(""PURPLE "ft_strcmp.s\n" RESET"");
+	testnbr = 0;
+	va_start(ap, func);
+	while ((param = va_arg(ap, char *)))
+	{
+		fprintf(fd, "[strlen%d] %ld | input: \"%s\"\n", ++testnbr, func(param), param);
+	}
+	va_end(ap);
+}
 
-	// strcmp_test("", "");
-	// strcmp_test("hello", "");
-	// strcmp_test("", "word");
-	// strcmp_test("hello", "hello");
-	// strcmp_test("hello", "word");
-	// strcmp_test("say something", "something");
-	// strcmp_test("something", "say something");
-	// printf("\n\n");
+int		main(int ac, char **av)
+{
+	FILE	*fd[4];
+	char 	*param;
+	char	*ft[2];
 
-	/*
-	** FT_WRITE
-	*/
-	// printf(""PURPLE "ft_write.s\n" RESET"");
+	if (ac < 2)
+		param = "test123";
+	else
+		param = av[1];
 
-	// write_test("hello word");
-	// printf("\n\n");
+	// open and write into log files
+	if ((fd[0] = fopen("actual.log", "w")) == NULL)
+		exit(EXIT_FAILURE);
+	if ((fd[1] = fopen("expected.log", "w")) == NULL)
+		exit(EXIT_FAILURE);
+	fd[2] = stdout;
+	fd[3] = stdout;
 
-	/*
-	** FT_READ
-	*/
-	// printf(""PURPLE "ft_read.s\n" RESET"");
-	// read_test("word hello");
-	// read_test(long_string);
-	// printf("\n\n");
+	// add ft
+	ft[0] = (!STDOUT ? "" : "ft_");
+	ft[1] = "";
 
-	/*
-	** FT_STRDUP
-	*/
-	// printf(""PURPLE "ft_strdup.s\n" RESET"");
-	// strdup_test("");
-	// strdup_test(long_string);
-	// printf("\n\n");
+	///////////////// ft_strlen vs strlen /////////////////
+	size_t	(*len[2])(const char *);
+	len[0] = ft_strlen;
+	len[1] = strlen;
+	for (int i = 0; i < 2 + STDOUT; i++)
+	{
+		fprintf(fd[i], 	"\n====== %sstrlen ======\n", ft[i % 2]);
+		check_strlen(fd[i], len[i % 2],
+			// add string parameters here
+			param,
+			"abcdef",
+			TERMINATE);
+	}
 
+	///////////// ft_strcpy vs strcpy //////////////////
+	char *(*cpy[2])(char *, const char *);
+	cpy[0] = ft_strcpy;
+	cpy[1] = strcpy;
+	for (int i = 0; i < 2 + STDOUT; i++)
+	{
+		fprintf(fd[i], "\n====== %sstrcpy ======\n", ft[i % 2]);
+		check_strcpy(fd[i], cpy[i % 2],
+			// add string parameters here
+			param,
+			"aaaaaaaaaaaaaaaaaa",
+			"       ",
+			TERMINATE);
+	}
+
+	// /////////////* ft_strcmp vs strcmp *///////////////////
+	// int (*cmp[2])(const char *, const char *);
+	// cmp[0] = ft_strcmp;
+	// cmp[1] = strcmp;
+	// for (int i = 0; i < 2 + STDOUT; i++)
+	// {
+	// 	fprintf(fd[i], "\n====== %sstrcmp ========\n", ft[i % 2]);
+	// 	check_strcmp(fd[i], cmp[i % 2],
+	// 		//add paris of string params here
+	// 		"abc", "abc",
+	// 		"abc", "abcd",
+	// 		"abcd", "abc",
+	// 		"abcz", "abc",
+	// 		"z", "abc",
+	// 		"12345678901234567890zz", "12345678901234567890z",
+	// 		"12345678901234567890z", "12345678901234567890z",
+	// 		TERMINATE);
+	// }
+
+	// /////////////* ft_strdup vs strdup *///////////////////
+	// char *(*dup[2])(const char *);
+	// dup[0] = ft_strdup;
+	// dup[1] = strdup;
+
+	// for (int i = 0; i < 2 + STDOUT; i++)
+	// {
+	// 	fprintf(fd[i], "\n====== %sstrdup ========\n", ft[i % 2]);
+	// 	check_strdup(fd[i], dup[i % 2],
+	// 		// add string parameters here
+	// 		param,
+	// 		"abcdef",
+	// 		"0",
+	// 		"     ",
+	// 		"\t",
+	// 		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+	// 		TERMINATE);
+	// }
+
+	// /////////////* ft_write vs write *///////////////////
+	// ssize_t (*wri[2])(int, const void *, size_t);
+	// wri[0] = ft_write;
+	// wri[1] = write;
+
+	// for (int i = 0; i < 2 + STDOUT; i++)
+	// {
+	// 	fprintf(fd[i], "\n====== %swrite ========\n", ft[i % 2]);
+	// 	check_write(fd[i], wri[i % 2],
+	// 		// add string parameters here
+	// 		param,
+	// 		"abcdef",
+	// 		"0",
+	// 		"     ",
+	// 		"\t",
+	// 		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+	// 		TERMINATE);
+	// }
+
+	// /////////////* ft_read vs read *///////////////////
+	// ssize_t	(*rea[2])(int, void *, size_t);
+	// rea[0] = ft_read;
+	// rea[1] = read;
+
+	// for (int i = 0; i < 2 + STDOUT; i++)
+	// {
+	// 	fprintf(fd[i], "\n====== %sread ========\n", ft[i % 2]);
+	// 	check_read(fd[i], rea[i % 2],
+	// 		// add filenames and bytes here
+	// 		"ft_read.s", 20,
+	// 		"ft_read.s", 1,
+	// 		"ft_strcmp.s", 0,
+	// 		"main.c", 10,
+	// 		"DNE", 20,
+	// 		TERMINATE);
+	// }
+	return (0);
 }
