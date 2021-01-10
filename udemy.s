@@ -1,12 +1,14 @@
 global _main
 
-section .data
-value db 1,2,3,4,5
+; section .data
+data dq 100
 
 section .text
-
+; default rel
 _main:
-	mov al, [rel value + 3] // al = 4
+	mov qword[rel data], 10
+	; mov rax, [data]
+	; mov rax, [rel data]
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 	xor rax, rax
 	ret
