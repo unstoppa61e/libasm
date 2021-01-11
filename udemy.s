@@ -1,14 +1,19 @@
 global _main
 
-; section .data
-data dq 100
+section .data
+source db "this is source", 0
+length equ $ - source
+
+destination times length db 0
 
 section .text
-; default rel
 _main:
-	mov qword[rel data], 10
-	; mov rax, [data]
-	; mov rax, [rel data]
+	cld ; clear direction flag
+	mov rsi, source
+	mov rdi, destination
+	mov rcx, length ; rcx acts as the counter for 'rep' instruction
+	rep movsb
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 	xor rax, rax
 	ret

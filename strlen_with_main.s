@@ -1,7 +1,12 @@
-global _ft_strlen
+global _main
+
+section .data
+s1 db "hogehoge", 0
 
 section .text
-_ft_strlen:
+_main:
+	mov rdi, s1
+
 	xor rax, rax
 
 .while:

@@ -1,0 +1,15 @@
+
+====== strlen ======
+[strlen1] 7 | input: "test123"
+[strlen2] 6 | input: "abcdef"
+
+====== strcpy ======
+[strcpy1] src = "test123" (0x104900f34)
+          (before) dst = "aaaaaaaaaaaaaaaaaaaa" (0x7fba45500000)
+          (after)  dst = "test123" (0x7fba45500000)
+[strcpy2] src = "aaaaaaaaaaaaaaaaaa" (0x104900f90)
+          (before) dst = "aaaaaaaaaaaaaaaaaaaa" (0x7fba45500000)
+          (after)  dst = "aaaaaaaaaaaaaaaaaa" (0x7fba45500000)
+[strcpy3] src = "       " (0x104900fa3)
+          (before) dst = "aaaaaaaaaaaaaaaaaaaa" (0x7fba45500000)
+          (after)  dst = "       " (0x7fba45500000)

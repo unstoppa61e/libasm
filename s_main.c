@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   s_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/25 11:43:13 by sperrin           #+#    #+#             */
-/*   Updated: 2021/01/08 08:55:52 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/11 16:53:13 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,40 +57,40 @@ void	strlen_test(char *str)
 
 void	strcpy_test(char *src)
 {
-	char	dest1[BUFFER_SIZE];
+	// char	dest1[BUFFER_SIZE];
 	char	dest2[BUFFER_SIZE];
 
-	bzero(dest1, BUFFER_SIZE);
+	// bzero(dest1, BUFFER_SIZE);
 	bzero(dest2, BUFFER_SIZE);
-	strcpy(dest1, src);
+	// strcpy(dest1, src);
 	ft_strcpy(dest2, src);
 
-	if (strcmp(dest1, dest2) == 0)
-		put_ok();
-	else
-		put_ko();
-	put_color("strcpy :", BLUE);
-	printf("%s\n", dest1);
-	put_color(" / ", YELLOW);
+	// if (strcmp(dest1, dest2) == 0)
+	// 	put_ok();
+	// else
+	// 	put_ko();
+	// put_color("strcpy :", BLUE);
+	// printf("%s\n", dest1);
+	// put_color(" / ", YELLOW);
 	put_color("ft_strcpy :", BLUE);
 	printf("%s\n", dest2);
 }
 
-// void	strcmp_test(char *s1, char *s2)
-// {
-// 	const int ret1 = strcmp(s1, s2);
-// 	const int ret2 = ft_strcmp(s1, s2);
+void	strcmp_test(char *s1, char *s2)
+{
+	const int ret1 = strcmp(s1, s2);
+	const int ret2 = ft_strcmp(s1, s2);
 
-// 	if ((ret1 > 0 && ret2 > 0) || (ret1 < 0 && ret2 < 0) || (ret1 == 0 && ret2 == 0))
-// 		put_ok();
-// 	else
-// 		put_ko();
-// 	put_color("strcmp :", BLUE);
-// 	printf("%d\n", ret1);
-// 	put_color(" / ", YELLOW);
-// 	put_color("ft_strcmp :", BLUE);
-// 	printf("%d\n", ret2);
-// }
+	if ((ret1 > 0 && ret2 > 0) || (ret1 < 0 && ret2 < 0) || (ret1 == 0 && ret2 == 0))
+		put_ok();
+	else
+		put_ko();
+	put_color("strcmp :", BLUE);
+	printf("%d\n", ret1);
+	put_color(" / ", YELLOW);
+	put_color("ft_strcmp :", BLUE);
+	printf("%d\n", ret2);
+}
 
 // void	write_test(char *str)
 // {
@@ -236,16 +236,16 @@ int		main(void)
 	/*
 	** FT_STRCMP
 	*/
-	// printf(""PURPLE "ft_strcmp.s\n" RESET"");
+	printf(""PURPLE "ft_strcmp.s\n" RESET"");
 
-	// strcmp_test("", "");
-	// strcmp_test("hello", "");
-	// strcmp_test("", "word");
-	// strcmp_test("hello", "hello");
-	// strcmp_test("hello", "word");
-	// strcmp_test("say something", "something");
-	// strcmp_test("something", "say something");
-	// printf("\n\n");
+	strcmp_test("", "");
+	strcmp_test("hello", "");
+	strcmp_test("", "word");
+	strcmp_test("hello", "hello");
+	strcmp_test("hello", "word");
+	strcmp_test("say something", "something");
+	strcmp_test("something", "say something");
+	printf("\n\n");
 
 	/*
 	** FT_WRITE

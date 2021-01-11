@@ -6,17 +6,18 @@
 #    By: monoue <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/23 11:57:28 by monoue            #+#    #+#              #
-#    Updated: 2021/01/08 12:03:32 by monoue           ###   ########.fr        #
+#    Updated: 2021/01/11 15:35:57 by monoue           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= libasm.a
 
 NA		= nasm
-NFLAGS	= -g -f macho64
+NFLAGS	= -g -Fdwarf -f macho64
 
 SRCS	= ft_strlen.s \
-		  ft_strcpy.s
+		  ft_strcpy.s \
+		  ft_strcmp.s
 
 OBJS	= $(SRCS:%.s=%.o)
 
@@ -38,6 +39,11 @@ udemy: $(UOBJS)
 	$(RM) $(UOBJS) $(UNAME)
 	nasm -g -f macho64 $(UDEMY)
 	ld udemy.o -lSystem -o $(UNAME)
+
+strcmp: ft_strcmp.o
+	$(RM) ft_strcmp.o strcmp
+	nasm -g -f macho64 ft_strcmp.s
+	ld ft_strcmp.o -lSystem -o strcmp
 
 clean:
 	$(RM) $(OBJS) libasm

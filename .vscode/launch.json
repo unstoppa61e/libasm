@@ -1,3 +1,4 @@
+// LLDB
 {
 	// IntelliSense を使用して利用可能な属性を学べます。
 	// 既存の属性の説明をホバーして表示します。
@@ -10,12 +11,46 @@
 			"name": "Debug",
 			// "program": "${workspaceFolder}/<your program>",
 			// "program": "/Users/monoue/Documents/libasm/my_git/udemy",
-			"program": "/Users/monoue/Documents/libasm/my_git/libasm",
+			"program": "/Users/monoue/Documents/libasm/my_git/a.out",
 			// "command": "sh.sh",
             "args": [], // もしコマンドライン引数を渡すならここに追記
 			// "args": [],
 			"cwd": "${workspaceFolder}",
-            "preLaunchTask": "libasm-debug"
+            // "preLaunchTask": "libasm-debug"
 		}
 	]
 }
+
+// GDB
+// {
+// 	// IntelliSense を使用して利用可能な属性を学べます。
+// 	// 既存の属性の説明をホバーして表示します。
+// 	// 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+// 	"version": "0.2.0",
+// 	"configurations": [
+// 		{
+// 			"name": "Debug",
+// 			"type": "cppdbg",
+// 			"request": "launch",
+// 			// "program": "${workspaceFolder}/<your program>",
+// 			// "program": "/Users/monoue/Documents/libasm/my_git/udemy",
+// 			"program": "/Users/monoue/Documents/libasm/my_git/libasm",
+// 			// "command": "sh.sh",
+// 			"args": [], // もしコマンドライン引数を渡すならここに追記
+// 			"stopAtEntry": false,
+// 			// "args": [],
+// 			"cwd": "${workspaceFolder}",
+// 			"externalConsole": false,
+// 			"MIMode": "gdb",
+// 			"setupCommands": [
+//                 {
+//                     "description": "gdb の再フォーマットを有効にする",
+//                     "text": "-enable-pretty-printing",
+//                     "ignoreFailures": true
+//                 }
+//             ],
+//             "preLaunchTask": "C/C++: gcc build active file",
+//             "miDebuggerPath": "/usr/bin/gdb"
+// 		}
+// 	]
+// }

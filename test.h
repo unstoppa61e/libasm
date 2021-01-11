@@ -12,5 +12,6 @@
 # define CYAN	"\033[36m"
 
 # define BUFFER_SIZE 600
+// # define BUFFER_SIZE 30
 
 #endif
