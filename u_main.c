@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   u_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 20:57:50 by mfunyu            #+#    #+#             */
-/*   Updated: 2021/01/08 12:25:50 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/12 16:06:44 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "u_main.h"
 
 /*
 ** check_functions:
@@ -49,31 +49,31 @@
 // 	va_end(ap);
 // }
 
-// void	check_write(FILE *fd, ssize_t (*func)(int, const void *, size_t), ...)
-// {
-// 	va_list	ap;
-// 	char	*param;
-// 	ssize_t	ret;
-// 	int		testnbr;
+void	check_write(FILE *fd, ssize_t (*func)(int, const void *, size_t), ...)
+{
+	va_list	ap;
+	char	*param
+	ssize_t	ret;
+	int		testnbr;
 
-// 	testnbr = 0;
-// 	va_start(ap, func);
-// 	if (!STDOUT)
-// 		write(fd->_file, "====== write ======\n", 20);
-// 	while ((param = va_arg(ap, char *)))
-// 	{
-// 		// write to each files
-// 		if (!STDOUT)
-// 			write(fd->_file, "[write]: \"", 10);
-// 		else
-// 			write(fd->_file, "\"", 1);
-// 		ret = (*func)(fd->_file, param, strlen(param));
-// 		write(fd->_file, "\"\n", 2);
-// 		// check return values
-// 		fprintf(fd, "[write%d]: %ld\n", ++testnbr, ret);
-// 	}
-// 	va_end(ap);
-// }
+	testnbr = 0;
+	va_start(ap, func);
+	if (!STDOUT)
+		write(fd->_file, "====== write ======\n", 20);
+	while ((param = va_arg(ap, char *)))
+	{
+		// write to each files
+		if (!STDOUT)
+			write(fd->_file, "[write]: \"", 10);
+		else
+			write(fd->_file, "\"", 1);
+		ret = (*func)(fd->_file, param, strlen(param));
+		write(fd->_file, "\"\n", 2);
+		// check return values
+		fprintf(fd, "[write%d]: %ld\n", ++testnbr, ret);
+	}
+	va_end(ap);
+}
 
 // void	check_strdup(FILE *fd, char *(*func)(const char *), ...)
 // {
@@ -245,23 +245,23 @@ int		main(int ac, char **av)
 	// }
 
 	// /////////////* ft_write vs write *///////////////////
-	// ssize_t (*wri[2])(int, const void *, size_t);
-	// wri[0] = ft_write;
-	// wri[1] = write;
+	ssize_t (*wri[2])(int, const void *, size_t);
+	wri[0] = ft_write;
+	wri[1] = write;
 
-	// for (int i = 0; i < 2 + STDOUT; i++)
-	// {
-	// 	fprintf(fd[i], "\n====== %swrite ========\n", ft[i % 2]);
-	// 	check_write(fd[i], wri[i % 2],
-	// 		// add string parameters here
-	// 		param,
-	// 		"abcdef",
-	// 		"0",
-	// 		"     ",
-	// 		"\t",
-	// 		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-	// 		TERMINATE);
-	// }
+	for (int i = 0; i < 2 + STDOUT; i++)
+	{
+		fprintf(fd[i], "\n====== %swrite ========\n", ft[i % 2]);
+		check_write(fd[i], wri[i % 2],
+			// add string parameters here
+			param,
+			"abcdef",
+			"0",
+			"     ",
+			"\t",
+			"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			TERMINATE);
+	}
 
 	// /////////////* ft_read vs read *///////////////////
 	// ssize_t	(*rea[2])(int, void *, size_t);

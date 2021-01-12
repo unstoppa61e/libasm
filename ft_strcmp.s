@@ -1,6 +1,5 @@
-global _ft_strcmp
-
 section .text
+global _ft_strcmp
 _ft_strcmp:
 	xor rax, rax			; c1 = 0;
 	xor rbx, rbx			; c2 = 0;

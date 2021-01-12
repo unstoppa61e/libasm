@@ -6,7 +6,7 @@
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 07:30:26 by monoue            #+#    #+#             */
-/*   Updated: 2021/01/12 13:11:02 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/12 16:34:07 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,13 +106,13 @@ void	put_test_end(char *title)
 	printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< %s end\n\n", title);
 }
 
-void	test_strlen(void)
+void	test_strlen(char *title)
 {
-	put_test_title("strlen");
+	put_test_title(title);
 	test_strlen_case("ten letters", get_specified_length_str(10));
 	test_strlen_case("zero letters", get_specified_length_str(0));
 	test_strlen_case("max length (= 509)", get_specified_length_str(509));
-	put_test_end("strlen");
+	put_test_end(title);
 }
 
 // << strcpy >>
@@ -177,13 +177,13 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 	}
 }
 
-void	test_strcpy(void)
+void	test_strcpy(char *title)
 {
-	put_test_title("strcpy");
+	put_test_title(title);
 	test_strcpy_case("basic (with new lines)", "a\nb\nc");
 	test_strcpy_case("null", "");
 	test_strcpy_case("max length (= 509)", get_specified_length_str(509));
-	put_test_end("strcpy");
+	put_test_end(title);
 }
 
 bool	is_strcmp_ok(const int libc_output, const int asm_output)
@@ -221,9 +221,9 @@ void	test_strcmp_case(char *case_name, char *s1, char *s2)
 	}
 }
 
-void	test_strcmp(void)
+void	test_strcmp(char *title)
 {
-	put_test_title("strcmp");
+	put_test_title(title);
 	test_strcmp_case("basic_same", "hoge-XXX", "hoge-XXX");
 	test_strcmp_case("basic_dif_1", "hoge-XXX", "hoge-OOO");
 	test_strcmp_case("basic_dif_2", "hoge-OOO", "hoge-XXX");
@@ -235,15 +235,45 @@ void	test_strcmp(void)
 	test_strcmp_case("max_length_same", get_specified_length_str(509), get_specified_length_str(509));
 	test_strcmp_case("max_length_dif1", get_specified_length_str(508), get_specified_length_str(509));
 	test_strcmp_case("max_length_dif2", get_specified_length_str(509), get_specified_length_str(508));
-	put_test_end("strcmp");
+	put_test_end(title);
 }
+
+void	test_write_case(char *str)
+{
+	int		ft_write_pipe[2];
+	char	buf[BUFFER_SIZE];
+	int		ret;
+
+	bzero(buf, BUFFER_SIZE);
+	if (pipe(ft_write_pipe) < 0)
+		exit(EXIT_FAILURE);
+	fcntl(ft_write_pipe[0], F_SETFL, O_NONBLOCK);
+	write(ft_write_pipe[1], str, strlen(str));
+	ret = read(ft_write_pipe[0], buf, BUFFER_SIZE);
+	buf[ret] = '\0';
+
+	if (!strcmp(buf, str))
+		printf("" GREEN "[OK] " RESET "");
+	else
+		printf("" RED "[KO] " RESET "");
+	close(ft_write_pipe[1]);
+	close(ft_write_pipe[0]);
+}
+
+void	test_write(char *title)
+{
+	put_test_title(title);
+	test_write_case();
+	put_test_end(title);
+}
+
 
 int main(void)
 {
-	test_strlen();
-	test_strcpy();
-	test_strcmp();
-	// test_write();
+	test_strlen("strlen");
+	test_strcpy("strcpy");
+	test_strcmp("strcmp");
+	test_write("write");
 	// test_read();
 	// test_strdup();
 }

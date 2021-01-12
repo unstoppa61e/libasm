@@ -1,16 +1,15 @@
-global _ft_strcpy
-
 section .text
+global _ft_strcpy
 _ft_strcpy:
-	xor rax, rax			; index = 0;
+	mov rax, rsi		; ret = src
+	cld					; clear the direction flag for movsb
+
 .while:
-	mov bl, [rsi + rax]		; c = src[index]
-	mov [rdi + rax], bl		; dst [index] = c;
-	cmp byte[rsi + rax], 0  ; if (src[index] - 0
-	je .endwhile			; == 0) goto .endwhile
-	inc rax					; index++;
-	jmp .while				; goto .while
+	cmp byte[rsi], 0	; if (*src - 0
+	je .endwhile		;			   == 0) goto .endwhile	
+	movsb				; *dst++ = *src++;
+	jmp .while			; goto .while
 
 .endwhile:
-	mov rax, rsi			; ret = src;
-	ret						; return (ret);
+	mov byte[rdi], 0	; *dst = '\0';
+	ret					; return (ret);
