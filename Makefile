@@ -6,7 +6,7 @@
 #    By: monoue <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/23 11:57:28 by monoue            #+#    #+#              #
-#    Updated: 2021/01/11 15:35:57 by monoue           ###   ########.fr        #
+#    Updated: 2021/01/12 12:45:28 by monoue           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,5 +52,8 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+test: re
+	./libasm
 
 .PHONY: all clean fclean re

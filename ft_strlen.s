@@ -2,13 +2,13 @@ global _ft_strlen
 
 section .text
 _ft_strlen:
-	xor rax, rax
+	xor rax, rax			; index = 0;
 
 .while:
-	cmp	byte[rdi + rax], 0
-	je	.endwhile
-	inc rax
-	jmp .while
+	cmp	byte[rdi + rax], 0	; if (str[index] - 0
+	je	.endwhile			; 					 == 0) goto .endwhile
+	inc rax					; index++;
+	jmp .while				; goto .while
 
 .endwhile:
-	ret
+	ret						; return (index);

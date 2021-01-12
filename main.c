@@ -5,280 +5,245 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/21 20:57:50 by mfunyu            #+#    #+#             */
-/*   Updated: 2021/01/08 12:25:50 by monoue           ###   ########.fr       */
+/*   Created: 2021/01/12 07:30:26 by monoue            #+#    #+#             */
+/*   Updated: 2021/01/12 13:11:02 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "libasm.h"
 
-/*
-** check_functions:
-** 	variadic functions (all very similar)
-** 	after third arguments, accpet parameters to pass to the function
-** 	using va_list, apply all arguments as a parameter to the function
-** 	NULL is used for terminating to read arguments
-*/
+const char *color_strs[COLORS_NUM] = {
+	RED_S,
+	GREEN_S,
+	YELLOW_S,	
+	BLUE_S,
+	PURPLE_S,
+	CYAN_S
+};
 
-// void	check_read(FILE *fd, ssize_t (*func)(int, void *, size_t), ...)
-// {
-// 	va_list	ap;
-// 	int		testnbr;
-// 	char	*param;
-// 	char	*buff;
-// 	int		ret;
-// 	int		fildes;
-// 	int		byte;
-
-// 	testnbr = 0;
-// 	va_start(ap, func);
-// 	buff = (char *)malloc(40);
-// 	while ((param = va_arg(ap, char *)))
-// 	{
-// 		// open a file
-// 		fildes = open(param, O_RDONLY);
-// 		byte = va_arg(ap, int);
-// 		ret = (*func)(fildes, buff, byte);
-// 		buff[byte] = '\0';
-// 		// check return values
-// 		fprintf(fd, "[read%d]: %d | \"%s\"\n", ++testnbr, ret, buff);
-// 		close(fildes);
-// 	}
-// 	free(buff);
-// 	buff = NULL;
-// 	va_end(ap);
-// }
-
-// void	check_write(FILE *fd, ssize_t (*func)(int, const void *, size_t), ...)
-// {
-// 	va_list	ap;
-// 	char	*param;
-// 	ssize_t	ret;
-// 	int		testnbr;
-
-// 	testnbr = 0;
-// 	va_start(ap, func);
-// 	if (!STDOUT)
-// 		write(fd->_file, "====== write ======\n", 20);
-// 	while ((param = va_arg(ap, char *)))
-// 	{
-// 		// write to each files
-// 		if (!STDOUT)
-// 			write(fd->_file, "[write]: \"", 10);
-// 		else
-// 			write(fd->_file, "\"", 1);
-// 		ret = (*func)(fd->_file, param, strlen(param));
-// 		write(fd->_file, "\"\n", 2);
-// 		// check return values
-// 		fprintf(fd, "[write%d]: %ld\n", ++testnbr, ret);
-// 	}
-// 	va_end(ap);
-// }
-
-// void	check_strdup(FILE *fd, char *(*func)(const char *), ...)
-// {
-// 	va_list	ap;
-// 	char	*param;
-// 	char	*dst;
-// 	int		testnbr;
-
-// 	testnbr = 0;
-// 	va_start(ap, func);
-// 	while ((param = va_arg(ap, char *)))
-// 	{
-// 		dst = (*func)(param);
-// 		fprintf(fd, "[strdup%d] %s | input: %s | ", ++testnbr, dst, param);
-// 		// fprintf(fd, "[strdup%d] %s (%p) | input: %s (%p) | ", ++testnbr, dst, dst, param, param);
-// 		if (dst != param)
-// 			fprintf(fd, "ADRS DIFF (%p)\n", param);
-// 		free(dst);
-// 		dst = NULL;
-// 	}
-// 	va_end(ap);
-// }
-
-// void	check_strcmp(FILE *fd, int (*func)(const char *, const char *), ...)
-// {
-// 	va_list	ap;
-// 	char	*s1;
-// 	char	*s2;
-// 	int		testnbr;
-
-// 	testnbr = 0;
-// 	va_start(ap, func);
-// 	while ((s1 = va_arg(ap, char *)))
-// 	{
-// 		s2 = va_arg(ap, char *);
-// 		fprintf(fd, "[strcmp%d] %d | %s, %s\n", ++testnbr, (*func)(s1, s2), s1, s2);
-// 	}
-// 	va_end(ap);
-// }
-
-
-void	check_strcpy(FILE *fd, char *(*func)(char *, const char *), ...)
+void	put_color(char *str, t_colors color)
 {
-	va_list	ap;
-	char	*param;
-	char	*dst;
-	int		testnbr;
-
-	testnbr = 0;
-	va_start(ap, func);
-	if (!(dst = (char *)calloc(sizeof(char), 30)))
-		exit(EXIT_FAILURE);
-	while ((param = va_arg(ap, char *)))
-	{
-		memset(dst, 'a', 20);
-		fprintf(fd, "[strcpy%d] src = \"%s\" (%p)\n", ++testnbr, param, param);
-		fprintf(fd, "          (before) dst = \"%s\" (%p)\n", dst, dst);
-		(*func)(dst, param);
-		fprintf(fd, "          (after)  dst = \"%s\" (%p)\n", dst, dst);
-	}
-	free(dst);
-	dst = NULL;
-	va_end(ap);
+	printf("%s%s%s", color_strs[color], str, RESET);
 }
 
-void	check_strlen(FILE *fd, size_t (*func)(const char *), ...)
+char	*get_specified_length_str(size_t len)
 {
-	va_list	ap;
-	char	*param;
-	int		testnbr;
+	size_t	index;
+	char	*str; // the minimum length required for ANSI compability
 
-	testnbr = 0;
-	va_start(ap, func);
-	while ((param = va_arg(ap, char *)))
-	{
-		fprintf(fd, "[strlen%d] %ld | input: \"%s\"\n", ++testnbr, func(param), param);
-	}
-	va_end(ap);
+	str = malloc(sizeof(char) * (len + 1));
+	if (str == NULL)
+		return (NULL);
+	index = 0;
+	for (size_t index = 0; index < len; index++)
+		str[index] = 'X';
+	str[len] = '\0';
+	return (str);
 }
 
-int		main(int ac, char **av)
+char	*ctos(char c)
 {
-	FILE	*fd[4];
-	char 	*param;
-	char	*ft[2];
+	char *str;
 
-	if (ac < 2)
-		param = "test123";
+	str = malloc(sizeof(char) * 2);
+	if (str == NULL)
+		return (NULL);
+	str[0] = c;
+	str[1] = '\n';
+	return (str);
+}
+
+void	put_ok_or_ko(int result)
+{
+	if (result == OK)
+		put_color("OK", GREEN_N);
 	else
-		param = av[1];
+		put_color("KO", RED_N);
+}
 
-	// open and write into log files
-	if ((fd[0] = fopen("actual.log", "w")) == NULL)
-		exit(EXIT_FAILURE);
-	if ((fd[1] = fopen("expected.log", "w")) == NULL)
-		exit(EXIT_FAILURE);
-	fd[2] = stdout;
-	fd[3] = stdout;
+// << strlen >>
+// OK ten letters (output: 10)
+// KO max length (= 509)
+//    libc: 509
+//    asm:  512
+// --- strlen test end ---
+//
 
-	// add ft
-	ft[0] = (!STDOUT ? "" : "ft_");
-	ft[1] = "";
-
-	///////////////// ft_strlen vs strlen /////////////////
-	size_t	(*len[2])(const char *);
-	len[0] = ft_strlen;
-	len[1] = strlen;
-	for (int i = 0; i < 2 + STDOUT; i++)
+void	test_strlen_case(char *case_name, char *test_case_str)
+{
+	const size_t	libc_output = strlen(test_case_str);
+	const size_t	asm_output = ft_strlen(test_case_str);
+	const bool		is_ok = (libc_output == asm_output);
+	
+	printf("  ");
+	if (is_ok)
+		put_ok_or_ko(OK);
+	else
+		put_ok_or_ko(KO);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		printf(" (output: %s%zu%s)\n", BLUE_S, asm_output, RESET);
+	else
 	{
-		fprintf(fd[i], 	"\n====== %sstrlen ======\n", ft[i % 2]);
-		check_strlen(fd[i], len[i % 2],
-			// add string parameters here
-			param,
-			"abcdef",
-			TERMINATE);
+		putchar('\n');
+		printf("   libc: %s%zu%s\n", BLUE_S, libc_output, RESET);
+		printf("   asm:  %s%zu%s\n", RED_S, asm_output, RESET);
+		putchar('\n');
 	}
+}
 
-	///////////// ft_strcpy vs strcpy //////////////////
-	char *(*cpy[2])(char *, const char *);
-	cpy[0] = ft_strcpy;
-	cpy[1] = strcpy;
-	for (int i = 0; i < 2 + STDOUT; i++)
+void	put_test_title(char *title)
+{
+	put_color(">>> ", YELLOW_N);
+	put_color(title, YELLOW_N);
+	put_color(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n", YELLOW_N);
+
+}
+
+void	put_test_end(char *title)
+{
+	printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< %s end\n\n", title);
+}
+
+void	test_strlen(void)
+{
+	put_test_title("strlen");
+	test_strlen_case("ten letters", get_specified_length_str(10));
+	test_strlen_case("zero letters", get_specified_length_str(0));
+	test_strlen_case("max length (= 509)", get_specified_length_str(509));
+	put_test_end("strlen");
+}
+
+// << strcpy >>
+// OK basic (dst & output: "a\nb\nc")
+// KO max length (= 509)
+//	  OK dst
+//    KO output
+//    	libc: "abc"
+//    	asm:  "abcdefg"
+// --- strcpy test end ---
+//
+void	test_strcpy_case(char *case_name, char *test_case_str)
+{
+	char	*libc_dst;
+	char	*asm_dst;
+	
+	libc_dst = malloc(sizeof(char) * (strlen(test_case_str) + 1));
+	if (libc_dst == NULL)
+		return;
+	asm_dst = malloc(sizeof(char) * (strlen(test_case_str) + 1));
+	if (asm_dst == NULL)
+		return;
+	const char *libc_output = strcpy(libc_dst, test_case_str);
+	const char *asm_output = ft_strcpy(asm_dst, test_case_str);
+	const bool dst_is_ok = (strcmp(libc_dst, asm_dst) == 0);
+	const bool output_is_ok = (strcmp(libc_output, asm_output) == 0);
+	const bool is_ok = (dst_is_ok && output_is_ok);
+
+	printf("  ");
+	if (is_ok)
+		put_ok_or_ko(OK);
+	else
+		put_ok_or_ko(KO);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		printf(" (dst & output: \"%s%s%s\")\n", BLUE_S, asm_output, RESET);
+	else
 	{
-		fprintf(fd[i], "\n====== %sstrcpy ======\n", ft[i % 2]);
-		check_strcpy(fd[i], cpy[i % 2],
-			// add string parameters here
-			param,
-			"aaaaaaaaaaaaaaaaaa",
-			"       ",
-			TERMINATE);
+		printf("\n   ");
+		if (dst_is_ok)
+			put_ok_or_ko(OK);
+		else
+			put_ok_or_ko(KO);
+		printf(" dst\n");
+		if (!dst_is_ok)
+		{
+			printf("      libc: \"%s%s%s\"\n", BLUE_S, libc_dst, RESET);
+			printf("      asm:  \"%s%s%s\"\n", RED_S, asm_dst, RESET);
+		}
+		printf("   ");
+		if (output_is_ok)
+			put_ok_or_ko(OK);
+		else
+			put_ok_or_ko(KO);
+		printf(" output\n");
+		if (!output_is_ok)
+		{
+			printf("      libc: \"%s%s%s\"\n", BLUE_S, libc_output, RESET);
+			printf("      asm:  \"%s%s%s\"\n", RED_S, asm_output, RESET);
+		}
 	}
+}
 
-	// /////////////* ft_strcmp vs strcmp *///////////////////
-	// int (*cmp[2])(const char *, const char *);
-	// cmp[0] = ft_strcmp;
-	// cmp[1] = strcmp;
-	// for (int i = 0; i < 2 + STDOUT; i++)
-	// {
-	// 	fprintf(fd[i], "\n====== %sstrcmp ========\n", ft[i % 2]);
-	// 	check_strcmp(fd[i], cmp[i % 2],
-	// 		//add paris of string params here
-	// 		"abc", "abc",
-	// 		"abc", "abcd",
-	// 		"abcd", "abc",
-	// 		"abcz", "abc",
-	// 		"z", "abc",
-	// 		"12345678901234567890zz", "12345678901234567890z",
-	// 		"12345678901234567890z", "12345678901234567890z",
-	// 		TERMINATE);
-	// }
+void	test_strcpy(void)
+{
+	put_test_title("strcpy");
+	test_strcpy_case("basic (with new lines)", "a\nb\nc");
+	test_strcpy_case("null", "");
+	test_strcpy_case("max length (= 509)", get_specified_length_str(509));
+	put_test_end("strcpy");
+}
 
-	// /////////////* ft_strdup vs strdup *///////////////////
-	// char *(*dup[2])(const char *);
-	// dup[0] = ft_strdup;
-	// dup[1] = strdup;
+bool	is_strcmp_ok(const int libc_output, const int asm_output)
+{
+	if (libc_output > 0 && asm_output > 0)
+		return (true);
+	if (libc_output < 0 && asm_output < 0)
+		return (true);
+	if (libc_output == 0 && asm_output == 0)
+		return (true);
+	return (false);
+}
 
-	// for (int i = 0; i < 2 + STDOUT; i++)
-	// {
-	// 	fprintf(fd[i], "\n====== %sstrdup ========\n", ft[i % 2]);
-	// 	check_strdup(fd[i], dup[i % 2],
-	// 		// add string parameters here
-	// 		param,
-	// 		"abcdef",
-	// 		"0",
-	// 		"     ",
-	// 		"\t",
-	// 		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-	// 		TERMINATE);
-	// }
+void	test_strcmp_case(char *case_name, char *s1, char *s2)
+{
+	const int	libc_output = strcmp(s1, s2);
+	const int	asm_output = ft_strcmp(s1, s2);
+	const bool	is_ok = is_strcmp_ok(libc_output, asm_output);
+	
+	printf("  ");
+	if (is_ok)
+		put_ok_or_ko(OK);
+	else
+		put_ok_or_ko(KO);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		printf(" (libc: %s%d%s, asm: %s%d%s)\n", BLUE_S, libc_output, RESET, BLUE_S, asm_output, RESET);
+	else
+	{
+		putchar('\n');
+		printf("   libc: %s%d%s\n", BLUE_S, libc_output, RESET);
+		printf("   asm:  %s%d%s\n", RED_S, asm_output, RESET);
+		putchar('\n');
+	}
+}
 
-	// /////////////* ft_write vs write *///////////////////
-	// ssize_t (*wri[2])(int, const void *, size_t);
-	// wri[0] = ft_write;
-	// wri[1] = write;
+void	test_strcmp(void)
+{
+	put_test_title("strcmp");
+	test_strcmp_case("basic_same", "hoge-XXX", "hoge-XXX");
+	test_strcmp_case("basic_dif_1", "hoge-XXX", "hoge-OOO");
+	test_strcmp_case("basic_dif_2", "hoge-OOO", "hoge-XXX");
+	test_strcmp_case("length_dif_1", "hoge", "hogeeee");
+	test_strcmp_case("length_dif_2", "hogeeee", "hoge");
+	test_strcmp_case("null null", "", "");
+	test_strcmp_case("normal vs null", "hoge", "");
+	test_strcmp_case("null vs normal", "", "hoge");
+	test_strcmp_case("max_length_same", get_specified_length_str(509), get_specified_length_str(509));
+	test_strcmp_case("max_length_dif1", get_specified_length_str(508), get_specified_length_str(509));
+	test_strcmp_case("max_length_dif2", get_specified_length_str(509), get_specified_length_str(508));
+	put_test_end("strcmp");
+}
 
-	// for (int i = 0; i < 2 + STDOUT; i++)
-	// {
-	// 	fprintf(fd[i], "\n====== %swrite ========\n", ft[i % 2]);
-	// 	check_write(fd[i], wri[i % 2],
-	// 		// add string parameters here
-	// 		param,
-	// 		"abcdef",
-	// 		"0",
-	// 		"     ",
-	// 		"\t",
-	// 		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-	// 		TERMINATE);
-	// }
-
-	// /////////////* ft_read vs read *///////////////////
-	// ssize_t	(*rea[2])(int, void *, size_t);
-	// rea[0] = ft_read;
-	// rea[1] = read;
-
-	// for (int i = 0; i < 2 + STDOUT; i++)
-	// {
-	// 	fprintf(fd[i], "\n====== %sread ========\n", ft[i % 2]);
-	// 	check_read(fd[i], rea[i % 2],
-	// 		// add filenames and bytes here
-	// 		"ft_read.s", 20,
-	// 		"ft_read.s", 1,
-	// 		"ft_strcmp.s", 0,
-	// 		"main.c", 10,
-	// 		"DNE", 20,
-	// 		TERMINATE);
-	// }
-	return (0);
+int main(void)
+{
+	test_strlen();
+	test_strcpy();
+	test_strcmp();
+	// test_write();
+	// test_read();
+	// test_strdup();
 }

@@ -1,32 +1,23 @@
 global _ft_strcmp
 
-; section .data
-; s1 dq "stA", 0
-; s2 dq "stZ", 0
-
 section .text
-; global _main
-; _main:
-; mov rdi, s1
-; mov rsi, s2
-
 _ft_strcmp:
-	xor rax, rax			; index = 0;
+	xor rax, rax			; c1 = 0;
+	xor rbx, rbx			; c2 = 0;
+	xor r8, r8				; index = 0;
+
 .while:
-	mov al, byte[rdi + rax]
-	cmp al, 0
-	je .endwhile			; == 0) goto .endwhile
-	mov bl, byte[rsi + rax]
-	cmp bl, 0
-	je .endwhile			; == 0) goto .endwhile
-	cmp al, bl
-	jne .endwhile			; == 0) goto .endwhile
-	inc rax					; index++;
+	mov al, byte[rdi + r8]	; c1 = s1[index];
+	mov bl, byte[rsi + r8]	; c2 = s2[index];
+	cmp al, 0				; if (c1 - 0
+	je .endwhile			; 			  == 0) goto .endwhile
+	cmp al, 0				; if (c2 - 0
+	je .endwhile			; 			  == 0) goto .endwhile
+	cmp al, bl				; if (c1 - c2
+	jne .endwhile			;			  != 0) goto .endwhile
+	inc r8					; index++;
 	jmp .while				; goto .while
 
 .endwhile:
-	; xor rax, rax
-	movzx rax, al
-	movzx rbx, bl
-	sub rax, rbx 
-	ret
+	sub rax, rbx			; c1 -= c2;
+	ret						; return (c1);
