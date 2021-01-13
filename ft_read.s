@@ -1,14 +1,14 @@
 section .text
-	global _ft_write
+	global _ft_read
 
-_ft_write:
+_ft_read:
 	test rdi, rdi		; if (fd
 	js .error			;			< 0) goto .error
 
 	test rdx, rdx		; if (count
 	jc .error			; 		 < 0) goto .error
 
-	mov rax, 0x2000004  ; func = write;
+	mov rax, 0x2000003  ; func = read;
 	syscall             ; ret = func(fd, buf, count)
 	js .error			; if (ret < 0) goto .error
 	jmp .end			; goto .end

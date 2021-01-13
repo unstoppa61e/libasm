@@ -6,7 +6,7 @@
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 07:30:26 by monoue            #+#    #+#             */
-/*   Updated: 2021/01/12 16:34:07 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/13 16:33:56 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ const char *color_strs[COLORS_NUM] = {
 	CYAN_S
 };
 
-void	put_color(char *str, t_colors color)
+void	put_color(const char *str, t_colors color)
 {
 	printf("%s%s%s", color_strs[color], str, RESET);
 }
@@ -53,9 +53,9 @@ char	*ctos(char c)
 	return (str);
 }
 
-void	put_ok_or_ko(int result)
+void	put_ok_or_ko(bool is_ok)
 {
-	if (result == OK)
+	if (is_ok)
 		put_color("OK", GREEN_N);
 	else
 		put_color("KO", RED_N);
@@ -76,10 +76,7 @@ void	test_strlen_case(char *case_name, char *test_case_str)
 	const bool		is_ok = (libc_output == asm_output);
 	
 	printf("  ");
-	if (is_ok)
-		put_ok_or_ko(OK);
-	else
-		put_ok_or_ko(KO);
+	put_ok_or_ko(is_ok);
 	putchar(' ');
 	put_color(case_name, PURPLE_N);
 	if (is_ok)
@@ -93,21 +90,23 @@ void	test_strlen_case(char *case_name, char *test_case_str)
 	}
 }
 
-void	put_test_title(char *title)
+void	put_test_title(const char *title)
 {
 	put_color(">>> ", YELLOW_N);
 	put_color(title, YELLOW_N);
-	put_color(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n", YELLOW_N);
+	put_color(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n", YELLOW_N);
 
 }
 
-void	put_test_end(char *title)
+void	put_test_end(const char *title)
 {
-	printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< %s end\n\n", title);
+	printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< %s end\n\n", title);
 }
 
-void	test_strlen(char *title)
+void	test_strlen()
 {
+	const char *title = "strlen";
+
 	put_test_title(title);
 	test_strlen_case("ten letters", get_specified_length_str(10));
 	test_strlen_case("zero letters", get_specified_length_str(0));
@@ -142,10 +141,7 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 	const bool is_ok = (dst_is_ok && output_is_ok);
 
 	printf("  ");
-	if (is_ok)
-		put_ok_or_ko(OK);
-	else
-		put_ok_or_ko(KO);
+	put_ok_or_ko(is_ok);
 	putchar(' ');
 	put_color(case_name, PURPLE_N);
 	if (is_ok)
@@ -153,10 +149,7 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 	else
 	{
 		printf("\n   ");
-		if (dst_is_ok)
-			put_ok_or_ko(OK);
-		else
-			put_ok_or_ko(KO);
+		put_ok_or_ko(dst_is_ok);
 		printf(" dst\n");
 		if (!dst_is_ok)
 		{
@@ -164,10 +157,7 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 			printf("      asm:  \"%s%s%s\"\n", RED_S, asm_dst, RESET);
 		}
 		printf("   ");
-		if (output_is_ok)
-			put_ok_or_ko(OK);
-		else
-			put_ok_or_ko(KO);
+		put_ok_or_ko(output_is_ok);
 		printf(" output\n");
 		if (!output_is_ok)
 		{
@@ -177,8 +167,10 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 	}
 }
 
-void	test_strcpy(char *title)
+void	test_strcpy()
 {
+	const char *title = "strcpy";
+
 	put_test_title(title);
 	test_strcpy_case("basic (with new lines)", "a\nb\nc");
 	test_strcpy_case("null", "");
@@ -204,10 +196,7 @@ void	test_strcmp_case(char *case_name, char *s1, char *s2)
 	const bool	is_ok = is_strcmp_ok(libc_output, asm_output);
 	
 	printf("  ");
-	if (is_ok)
-		put_ok_or_ko(OK);
-	else
-		put_ok_or_ko(KO);
+	put_ok_or_ko(is_ok);
 	putchar(' ');
 	put_color(case_name, PURPLE_N);
 	if (is_ok)
@@ -221,15 +210,17 @@ void	test_strcmp_case(char *case_name, char *s1, char *s2)
 	}
 }
 
-void	test_strcmp(char *title)
+void	test_strcmp()
 {
+	const char *title = "strcmp";
+
 	put_test_title(title);
 	test_strcmp_case("basic_same", "hoge-XXX", "hoge-XXX");
 	test_strcmp_case("basic_dif_1", "hoge-XXX", "hoge-OOO");
 	test_strcmp_case("basic_dif_2", "hoge-OOO", "hoge-XXX");
 	test_strcmp_case("length_dif_1", "hoge", "hogeeee");
 	test_strcmp_case("length_dif_2", "hogeeee", "hoge");
-	test_strcmp_case("null null", "", "");
+	test_strcmp_case("both null", "", "");
 	test_strcmp_case("normal vs null", "hoge", "");
 	test_strcmp_case("null vs normal", "", "hoge");
 	test_strcmp_case("max_length_same", get_specified_length_str(509), get_specified_length_str(509));
@@ -238,42 +229,320 @@ void	test_strcmp(char *title)
 	put_test_end(title);
 }
 
-void	test_write_case(char *str)
+void	test_write_case(char *case_name, char const *str, size_t count)
 {
-	int		ft_write_pipe[2];
-	char	buf[BUFFER_SIZE];
-	int		ret;
+	int fds[2];
+	ssize_t write_rets[2];
+	ssize_t read_rets[2];
+	int errnos[2];
+	typedef ssize_t (*t_write)(int, const void*, size_t);
+	t_write funcs[2] = {write, ft_write};
+	const char *filenames[2] = {"linux_write_output", "ft_write_output"};
+	char bufs[2][BUFFER_SIZE];
 
-	bzero(buf, BUFFER_SIZE);
-	if (pipe(ft_write_pipe) < 0)
-		exit(EXIT_FAILURE);
-	fcntl(ft_write_pipe[0], F_SETFL, O_NONBLOCK);
-	write(ft_write_pipe[1], str, strlen(str));
-	ret = read(ft_write_pipe[0], buf, BUFFER_SIZE);
-	buf[ret] = '\0';
+	for (int i = 0; i < 2; i++)
+	{
+		fds[i] = open(filenames[i], O_CREAT | O_RDWR | O_TRUNC, S_IRWXU);
+		if (fds[i] == ERROR)
+		{
+			perror("");
+			exit(EXIT_FAILURE);
+		}
+		fcntl(fds[i], F_SETFL, O_NONBLOCK);
+		errnos[i] = 0;
+		write_rets[i] = funcs[i](fds[i], str, count);
+		errnos[i] = errno;
+		bzero(bufs[i], BUFFER_SIZE);
+		read_rets[i] = read(fds[i], bufs[i], BUFFER_SIZE);
+		bufs[i][read_rets[i]] = '\0';
+		close(fds[i]);
+	}
+	const bool is_output_ok = (strcmp(bufs[0], bufs[1]) == 0);
+	const bool is_ret_ok = (write_rets[0] == write_rets[1]);
+	const bool is_errno_ok = (errnos[0] == errnos[1]);
+	const bool is_ok = (is_output_ok && is_ret_ok && is_errno_ok);
 
-	if (!strcmp(buf, str))
-		printf("" GREEN "[OK] " RESET "");
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+	{
+		if (errnos[1] != 0)	
+			printf(" errno: %s%d%s", BLUE_S, errnos[1], RESET);
+	}
 	else
-		printf("" RED "[KO] " RESET "");
-	close(ft_write_pipe[1]);
-	close(ft_write_pipe[0]);
+	{
+		printf("\n   ");
+		put_ok_or_ko(is_output_ok);
+		printf(" output\n");
+		if (!is_output_ok)
+		{
+			printf("      linux: \"%s%s%s\"\n", BLUE_S, bufs[0], RESET);
+			printf("      asm:   \"%s%s%s\"\n", RED_S, bufs[1], RESET);
+		}
+		printf("   ");
+		put_ok_or_ko(is_ret_ok);
+		printf(" return value\n");
+		if (!is_ret_ok)
+		{
+			printf("      linux: \"%s%zd%s\"\n", BLUE_S, write_rets[0], RESET);
+			printf("      asm:   \"%s%zd%s\"\n", RED_S, write_rets[1], RESET);
+		}
+		printf("   ");
+		put_ok_or_ko(is_errno_ok);
+		printf(" errno\n");
+		if (!is_errno_ok)
+		{
+			printf("      linux: \"%s%d%s\"\n", BLUE_S, errnos[0], RESET);
+			printf("      asm:   \"%s%d%s\"\n", RED_S, errnos[1], RESET);
+		}
+	}
+	putchar('\n');
 }
 
-void	test_write(char *title)
+void	test_write_signed_fd(char *case_name, int fd, char *str_name, char const *str, size_t count)
 {
+	int		errnos[2];
+	typedef ssize_t (*t_write)(int, const void*, size_t);
+	t_write funcs[2] = {write, ft_write};
+
+	for (int i = 0; i < 2; i++)
+	{
+		errnos[i] = 0;
+		funcs[i](fd, str, count);
+		errnos[i] = errno;
+	}
+	const bool is_ok = (errnos[0] == errnos[1]);
+
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	printf(" %s(fd: %d, str: %s, count: %zu)%s ", PURPLE_S, fd, str_name, count, RESET);
+	if (is_ok)
+		printf("errno: %s%d%s", BLUE_S, errnos[1], RESET);
+	else
+	{
+		printf("      linux errno: \"%s%d%s\"\n", BLUE_S, errnos[0], RESET);
+		printf("      asm   errno:   \"%s%d%s\"\n", RED_S, errnos[1], RESET);
+	}
+	putchar('\n');
+}
+
+void	test_write()
+{
+	const char *title = "write";
+
+	const char *basic = "a\nb\nc";
+	const char *max_length = get_specified_length_str(512);
+	const char *empty = "";
+
 	put_test_title(title);
-	test_write_case();
+	test_write_case("basic (\"a\\nb\\nc\", len)", basic, strlen(basic));
+	test_write_case("empty (\"\", len)", empty, strlen(empty));
+	test_write_case("count shorter than actual (\"a\\nb\\nc\", len - 2)", basic, strlen(basic) - 2);
+	test_write_case("count longer than actual (\"a\\nb\\nc\", len + 2)", basic, strlen(basic) + 2);
+	test_write_case("max length ('X' * 512, len)", max_length, strlen(max_length));
+	test_write_case("count_zero (basic, 0)", basic, 0);
+	test_write_case("count_signed_01 (basic, -1)", basic, -1);
+	test_write_case("count_signed_02 (basic, -10)", basic, -10);
+	test_write_case("count_signed_03 (basic, -100)", basic, -100);
+	test_write_case("count_signed_04 (basic, -1000)", basic, -1000);
+	test_write_case("count_signed_05 (basic, -10000)", basic, -10000);
+	test_write_case("count_signed_06 (basic, -100000)", basic, -100000);
+	test_write_case("count_signed_07 (basic, -1000000)", basic, -1000000);
+	test_write_case("count_signed_08 (basic, -10000000)", basic, -10000000);
+	test_write_case("count_signed_09 (basic, -100000000)", basic, -100000000);
+	test_write_case("count_signed_10 (basic, -1000000000)", basic, -1000000000);
+	test_write_case("count_signed_11 (basic, -10000000000)", basic, -10000000000);
+	test_write_case("count_signed_12 (basic, -100000000000)", basic, -100000000000);
+	test_write_signed_fd("fd_signed_01", -1, "basic", basic, 0);
+	test_write_signed_fd("fd_signed_02", -10, "max_length", max_length, -10);
+	test_write_signed_fd("fd_signed_03", -100, "empty", empty, 50);
+	test_write_signed_fd("fd_signed_04", -1000, "basic", basic, 10);
+	test_write_signed_fd("fd_signed_05", -10000, "empty", empty, 100);
+	test_write_signed_fd("fd_signed_06", -100000, "max_length", max_length, -500);
+	test_write_signed_fd("fd_signed_07", -1000000, "basic", basic, -10000);
+	test_write_signed_fd("fd_signed_08", -10000000, "empty", empty, 1000);
+	test_write_signed_fd("fd_signed_09", -100000000, "max_length", max_length, -50000000000000);
+	test_write_signed_fd("fd_signed_10", -1000000000, "basic", basic, 100);
 	put_test_end(title);
 }
 
+void	test_read_fixing_buf(char *case_name, char const *str, size_t count)
+{
+	int fds[2];
+	ssize_t rets[2];
+	int errnos[2];
+	typedef ssize_t (*t_read)(int, void*, size_t);
+	t_read funcs[2] = {read, ft_read};
+	const char *filenames[2] = {"linux_read_output", "ft_read_output"};
+	char bufs[2][BUFFER_SIZE];
+
+	for (int i = 0; i < 2; i++)
+	{
+		fds[i] = open(filenames[i], O_CREAT | O_RDWR | O_TRUNC, S_IRWXU);
+		if (fds[i] == ERROR)
+		{
+			perror("");
+			exit(EXIT_FAILURE);
+		}
+		fcntl(fds[i], F_SETFL, O_NONBLOCK);
+		write(fds[i], str, count);
+		bzero(bufs[i], BUFFER_SIZE);
+		errnos[i] = 0;
+		rets[i] = funcs[i](fds[i], bufs[i], BUFFER_SIZE);
+		errnos[i] = errno;
+		bufs[i][rets[i]] = '\0';
+		close(fds[i]);
+	}
+	const bool is_output_ok = (strcmp(bufs[0], bufs[1]) == 0);
+	const bool is_ret_ok = (rets[0] == rets[1]);
+	const bool is_errno_ok = (errnos[0] == errnos[1]);
+	const bool is_ok = (is_output_ok && is_ret_ok && is_errno_ok);
+
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+	{
+		if (errnos[1] != 0)	
+			printf(" errno: %s%d%s", BLUE_S, errnos[1], RESET);
+	}
+	else
+	{
+		printf("\n   ");
+		put_ok_or_ko(is_output_ok);
+		printf(" output\n");
+		if (!is_output_ok)
+		{
+			printf("      linux: \"%s%s%s\"\n", BLUE_S, bufs[0], RESET);
+			printf("      asm:   \"%s%s%s\"\n", RED_S, bufs[1], RESET);
+		}
+		printf("   ");
+		put_ok_or_ko(is_ret_ok);
+		printf(" return value\n");
+		if (!is_ret_ok)
+		{
+			printf("      linux: \"%s%zd%s\"\n", BLUE_S, rets[0], RESET);
+			printf("      asm:   \"%s%zd%s\"\n", RED_S, rets[1], RESET);
+		}
+		printf("   ");
+		put_ok_or_ko(is_errno_ok);
+		printf(" errno\n");
+		if (!is_errno_ok)
+		{
+			printf("      linux: \"%s%d%s\"\n", BLUE_S, errnos[0], RESET);
+			printf("      asm:   \"%s%d%s\"\n", RED_S, errnos[1], RESET);
+		}
+	}
+	putchar('\n');
+}
+
+void	test_read_varying_buf(char *case_name, int fd, int buffer_size, size_t count)
+{
+	int		errnos[2];
+	typedef ssize_t (*t_read)(int, void*, size_t);
+	t_read	funcs[2] = {read, ft_read};
+	char bufs[2][buffer_size];
+
+	for (int i = 0; i < 2; i++)
+	{
+		errnos[i] = 0;
+		funcs[i](fd, bufs[i], count);
+		errnos[i] = errno;
+	}
+	const bool is_ok = (errnos[0] == errnos[1]);
+
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	printf(" %s(fd: %d, buffer_size: %d, count: %zu)%s ", PURPLE_S, fd, buffer_size, count, RESET);
+	if (is_ok)
+		printf("errno: %s%d%s", BLUE_S, errnos[1], RESET);
+	else
+	{
+		printf("      linux errno: \"%s%d%s\"\n", BLUE_S, errnos[0], RESET);
+		printf("      asm   errno:   \"%s%d%s\"\n", RED_S, errnos[1], RESET);
+	}
+	putchar('\n');
+}
+
+void	test_read()
+{
+	const char *title = "read";
+
+	const char *basic = "a\nb\nc";
+	const char *max_length = get_specified_length_str(512);
+	const char *empty = "";
+
+	put_test_title(title);
+	test_read_fixing_buf("basic (\"a\\nb\\nc\", len)", basic, strlen(basic));
+	test_read_fixing_buf("empty (\"\", len)", empty, strlen(empty));
+	test_read_fixing_buf("count shorter than actual (\"a\\nb\\nc\", len - 2)", basic, strlen(basic) - 2);
+	test_read_fixing_buf("count longer than actual (\"a\\nb\\nc\", len + 2)", basic, strlen(basic) + 2);
+	test_read_fixing_buf("max length ('X' * 512, len)", max_length, strlen(max_length));
+	test_read_fixing_buf("count_zero (basic, 0)", basic, 0);
+	test_read_fixing_buf("count_signed_01 (basic, -1)", basic, -1);
+	test_read_fixing_buf("count_signed_02 (basic, -10)", basic, -10);
+	test_read_fixing_buf("count_signed_03 (basic, -100)", basic, -100);
+	test_read_fixing_buf("count_signed_04 (basic, -1000)", basic, -1000);
+	test_read_fixing_buf("count_signed_05 (basic, -10000)", basic, -10000);
+	test_read_fixing_buf("count_signed_06 (basic, -100000)", basic, -100000);
+	test_read_fixing_buf("count_signed_07 (basic, -1000000)", basic, -1000000);
+	test_read_fixing_buf("count_signed_08 (basic, -10000000)", basic, -10000000);
+	test_read_fixing_buf("count_signed_09 (basic, -100000000)", basic, -100000000);
+	test_read_fixing_buf("count_signed_10 (basic, -1000000000)", basic, -1000000000);
+	test_read_fixing_buf("count_signed_11 (basic, -10000000000)", basic, -10000000000);
+	test_read_fixing_buf("count_signed_12 (basic, -100000000000)", basic, -100000000000);
+	test_read_varying_buf("fd_zero", 10000, 0, 100); // これは残す
+	test_read_varying_buf("fd_signed_1", -1, 100, 0);
+	test_read_varying_buf("fd_signed_2", -100, 500, 50);
+	test_read_varying_buf("fd_signed_3", -10000, 0, 100);
+	test_read_varying_buf("fd_signed_4", -1000000000, 1000, 100);
+
+	// test_read_varying_buf("segv_01", 1, -100, 0);
+	// test_read_varying_buf("segv_02", 10, -100, -10);
+	// test_read_varying_buf("segv_03", 100, -500, 50);
+	// test_read_varying_buf("segv_04", 1000, -1000000000, 10);
+	// test_read_varying_buf("segv_05", 100000, -10, -500);
+	// test_read_varying_buf("segv_06", 1000000, -1000000, -10000);
+	// test_read_varying_buf("segv_07", 10000000, -1, 1000);
+	// test_read_varying_buf("segv_08", 100000000, -1, -50000000000000);
+	// test_read_varying_buf("segv_09", 1000000000, -1000, 100);
+	// test_read_varying_buf("segv_10", -10, -100, -10);
+	// test_read_varying_buf("segv_11", -1000, 1000000000, 10);
+	// test_read_varying_buf("segv_12", -100000, -10, -500);
+	// test_read_varying_buf("segv_13", -1000000, -1000000, -10000);
+	// test_read_varying_buf("segv_14", -10000000, 1, 1000);
+	// test_read_varying_buf("segv_15", -100000000, -1, -50000000000000);
+	put_test_end(title);
+}
+
+void	test_strdup(void)
+{
+	const char *title = "strdup";
+
+	put_test_title(title);
+
+	
+
+
+
+
+
+	put_test_end(title);
+}
 
 int main(void)
 {
-	test_strlen("strlen");
-	test_strcpy("strcpy");
-	test_strcmp("strcmp");
-	test_write("write");
-	// test_read();
-	// test_strdup();
+	test_strlen();
+	test_strcpy();
+	test_strcmp();
+	test_write();
+	test_read();
+	test_strdup();
 }

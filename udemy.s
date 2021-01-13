@@ -1,5 +1,7 @@
 global _main
 
+%define hoge 100
+
 section .data
 source db "this is source", 0
 length equ $ - source

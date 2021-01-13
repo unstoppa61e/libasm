@@ -1,9 +1,14 @@
+%macro clear_reg 1
+	xor %1, %1
+%endmacro
+
 section .text
-global _ft_strcmp
+	global _ft_strcmp
+
 _ft_strcmp:
-	xor rax, rax			; c1 = 0;
-	xor rbx, rbx			; c2 = 0;
-	xor r8, r8				; index = 0;
+	clear_reg rax			; c1 = 0;
+	clear_reg rbx			; c2 = 0;
+	clear_reg r8			; index = 0;
 
 .while:
 	mov al, byte[rdi + r8]	; c1 = s1[index];

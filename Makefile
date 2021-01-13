@@ -6,7 +6,7 @@
 #    By: monoue <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/23 11:57:28 by monoue            #+#    #+#              #
-#    Updated: 2021/01/12 16:12:40 by monoue           ###   ########.fr        #
+#    Updated: 2021/01/13 15:15:17 by monoue           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ NFLAGS	= -g -Fdwarf -f macho64
 SRCS	= ft_strlen.s \
 		  ft_strcpy.s \
 		  ft_strcmp.s \
-		  ft_write.s
+		  ft_write.s \
+		  ft_read.s 
 
 OBJS	= $(SRCS:%.s=%.o)
 
