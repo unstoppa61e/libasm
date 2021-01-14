@@ -6,7 +6,7 @@
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 07:25:41 by monoue            #+#    #+#             */
-/*   Updated: 2021/01/13 16:31:59 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/14 12:19:08 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,17 @@
 # define BLUE_S		ESC"[34:1m"
 # define PURPLE_S	ESC"[35:1m"
 # define CYAN_S		ESC"[36:1m"
+# ifndef RESET
 # define RESET		ESC"[m"
+# endif
 
 # define OK	1
 # define KO	0
 # define SUCCESS 0
 # define ERROR -1
 
-# define BUFFER_SIZE 512 // write command's max writable size at a time
+// # define BUFFER_SIZE 512 // write command's max writable size at a time
+# define BUFFER 512 // write command's max writable size at a time
 
 # define ITOC(num) num + '0' 
 
@@ -52,11 +55,18 @@ typedef enum	e_colors{
 	COLORS_NUM
 }				t_colors;
 
+typedef struct	s_list
+{
+	void 			*data;
+	struct s_list 	*next;
+}				t_list;
+
 size_t	ft_strlen(const char *s);
 char	*ft_strcpy(char *dst, const char *src);
 int		ft_strcmp(const char *s1, const char *s2);
 ssize_t	ft_write(int fildes, const void *buf, size_t nbyte);
 ssize_t	ft_read(int fildes, void *buf, size_t nbyte);
 char	*ft_strdup(const char *s1);
-
+int		ft_list_size(t_list *begin_list);
+void	ft_list_push_front(t_list **begin_list, void *data);
 #endif

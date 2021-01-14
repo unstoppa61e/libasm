@@ -6,7 +6,7 @@
 #    By: monoue <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/23 11:57:28 by monoue            #+#    #+#              #
-#    Updated: 2021/01/13 15:15:17 by monoue           ###   ########.fr        #
+#    Updated: 2021/01/14 14:26:29 by monoue           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,10 @@ SRCS	= ft_strlen.s \
 		  ft_strcpy.s \
 		  ft_strcmp.s \
 		  ft_write.s \
-		  ft_read.s 
+		  ft_read.s \
+		  ft_strdup.s \
+		  ft_list_size_bonus.s \
+		  ft_list_push_front_bonus.s
 
 OBJS	= $(SRCS:%.s=%.o)
 

@@ -6,7 +6,7 @@
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 07:30:26 by monoue            #+#    #+#             */
-/*   Updated: 2021/01/13 16:33:56 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/14 15:24:12 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	test_strlen()
 	put_test_title(title);
 	test_strlen_case("ten letters", get_specified_length_str(10));
 	test_strlen_case("zero letters", get_specified_length_str(0));
+	test_strlen_case("null char in the middle", "hoge\0hoge");
 	test_strlen_case("max length (= 509)", get_specified_length_str(509));
 	put_test_end(title);
 }
@@ -128,12 +129,9 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 	char	*libc_dst;
 	char	*asm_dst;
 	
-	libc_dst = malloc(sizeof(char) * (strlen(test_case_str) + 1));
-	if (libc_dst == NULL)
-		return;
-	asm_dst = malloc(sizeof(char) * (strlen(test_case_str) + 1));
-	if (asm_dst == NULL)
-		return;
+	libc_dst = get_specified_length_str(strlen(test_case_str) + 3);
+	asm_dst = get_specified_length_str(strlen(test_case_str) + 3);
+
 	const char *libc_output = strcpy(libc_dst, test_case_str);
 	const char *asm_output = ft_strcpy(asm_dst, test_case_str);
 	const bool dst_is_ok = (strcmp(libc_dst, asm_dst) == 0);
@@ -145,7 +143,94 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 	putchar(' ');
 	put_color(case_name, PURPLE_N);
 	if (is_ok)
-		printf(" (dst & output: \"%s%s%s\")\n", BLUE_S, asm_output, RESET);
+		// printf(" (dst & output: \"%s%s%s\")\n", BLUE_S, asm_output, RESET);
+		printf(" (dst: \"%s%s%s\", output: \"%s%s%s\")\n", BLUE_S, asm_dst, RESET, BLUE_S, asm_output, RESET);
+	else
+	{
+		printf("\n   ");
+		put_ok_or_ko(dst_is_ok);
+		printf(" dst\n");
+		if (!dst_is_ok)
+		{
+			printf("      libc: \"%s%s%s\"\n", BLUE_S, libc_dst, RESET);
+			printf("      asm:  \"%s%s%s\"\n", RED_S, asm_dst, RESET);
+		}
+		printf("   ");
+		put_ok_or_ko(output_is_ok);
+		printf(" output\n");
+		if (!output_is_ok)
+		{
+			printf("      libc: \"%s%s%s\"\n", BLUE_S, libc_output, RESET);
+			printf("      asm:  \"%s%s%s\"\n", RED_S, asm_output, RESET);
+		}
+	}
+}
+
+void	test_strcpy_case_less_malloc_space(char *case_name, const char *test_case_str)
+{
+	char	*libc_dst;
+	char	*asm_dst;
+	
+	libc_dst = get_specified_length_str(strlen(test_case_str) - 3);
+	asm_dst = get_specified_length_str(strlen(test_case_str) - 3);
+
+	const char *libc_output = strcpy(libc_dst, test_case_str);
+	const char *asm_output = ft_strcpy(asm_dst, test_case_str);
+	const bool dst_is_ok = (strcmp(libc_dst, asm_dst) == 0);
+	const bool output_is_ok = (strcmp(libc_output, asm_output) == 0);
+	const bool is_ok = (dst_is_ok && output_is_ok);
+
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		// printf(" (dst & output: \"%s%s%s\")\n", BLUE_S, asm_output, RESET);
+		printf(" (dst: \"%s%s%s\", output: \"%s%s%s\")\n", BLUE_S, asm_dst, RESET, BLUE_S, asm_output, RESET);
+	else
+	{
+		printf("\n   ");
+		put_ok_or_ko(dst_is_ok);
+		printf(" dst\n");
+		if (!dst_is_ok)
+		{
+			printf("      libc: \"%s%s%s\"\n", BLUE_S, libc_dst, RESET);
+			printf("      asm:  \"%s%s%s\"\n", RED_S, asm_dst, RESET);
+		}
+		printf("   ");
+		put_ok_or_ko(output_is_ok);
+		printf(" output\n");
+		if (!output_is_ok)
+		{
+			printf("      libc: \"%s%s%s\"\n", BLUE_S, libc_output, RESET);
+			printf("      asm:  \"%s%s%s\"\n", RED_S, asm_output, RESET);
+		}
+	}
+}
+
+void	test_strcpy_changing_char(char *case_name, const char *test_case_str)
+{
+	char	*libc_dst;
+	char	*asm_dst;
+	
+	libc_dst = get_specified_length_str(strlen(test_case_str) + 3);
+	asm_dst = get_specified_length_str(strlen(test_case_str) + 3);
+
+	char *libc_output = strcpy(libc_dst, test_case_str);
+	char *asm_output = ft_strcpy(asm_dst, test_case_str);
+	libc_output[0] = 'Z';
+	asm_output[0] = 'Z';
+	const bool dst_is_ok = (strcmp(libc_dst, asm_dst) == 0);
+	const bool output_is_ok = (strcmp(libc_output, asm_output) == 0);
+	const bool is_ok = (dst_is_ok && output_is_ok);
+
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		// printf(" (dst & output: \"%s%s%s\")\n", BLUE_S, asm_output, RESET);
+		printf(" (dst: \"%s%s%s\", output: \"%s%s%s\")\n", BLUE_S, asm_dst, RESET, BLUE_S, asm_output, RESET);
 	else
 	{
 		printf("\n   ");
@@ -170,11 +255,17 @@ void	test_strcpy_case(char *case_name, char *test_case_str)
 void	test_strcpy()
 {
 	const char *title = "strcpy";
+	const char *basic = "a\nb\nc";
 
 	put_test_title(title);
 	test_strcpy_case("basic (with new lines)", "a\nb\nc");
 	test_strcpy_case("null", "");
+	test_strcpy_case("null char in the middle", "hoge\0hoge");
 	test_strcpy_case("max length (= 509)", get_specified_length_str(509));
+	test_strcpy_case_less_malloc_space("basic (with less malloc space)", basic);
+	test_strcpy_case_less_malloc_space("max length (with less malloc space)", get_specified_length_str(509));
+	test_strcpy_changing_char("basic (changing the first character)", basic);
+	test_strcpy_changing_char("max length (changing the first character)", get_specified_length_str(509));
 	put_test_end(title);
 }
 
@@ -221,6 +312,8 @@ void	test_strcmp()
 	test_strcmp_case("length_dif_1", "hoge", "hogeeee");
 	test_strcmp_case("length_dif_2", "hogeeee", "hoge");
 	test_strcmp_case("both null", "", "");
+	test_strcmp_case("null char in the middle_1", "hoge\0hoge", "hoge\0hoge");
+	test_strcmp_case("null char in the middle_1", "hoge\0hoge", "hoge\0fuga");
 	test_strcmp_case("normal vs null", "hoge", "");
 	test_strcmp_case("null vs normal", "", "hoge");
 	test_strcmp_case("max_length_same", get_specified_length_str(509), get_specified_length_str(509));
@@ -238,7 +331,8 @@ void	test_write_case(char *case_name, char const *str, size_t count)
 	typedef ssize_t (*t_write)(int, const void*, size_t);
 	t_write funcs[2] = {write, ft_write};
 	const char *filenames[2] = {"linux_write_output", "ft_write_output"};
-	char bufs[2][BUFFER_SIZE];
+	// char bufs[2][BUFFER_SIZE];
+	char bufs[2][BUFFER];
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -252,8 +346,10 @@ void	test_write_case(char *case_name, char const *str, size_t count)
 		errnos[i] = 0;
 		write_rets[i] = funcs[i](fds[i], str, count);
 		errnos[i] = errno;
-		bzero(bufs[i], BUFFER_SIZE);
-		read_rets[i] = read(fds[i], bufs[i], BUFFER_SIZE);
+		// bzero(bufs[i], BUFFER_SIZE);
+		bzero(bufs[i], BUFFER);
+		// read_rets[i] = read(fds[i], bufs[i], BUFFER_SIZE);
+		read_rets[i] = read(fds[i], bufs[i], BUFFER);
 		bufs[i][read_rets[i]] = '\0';
 		close(fds[i]);
 	}
@@ -337,10 +433,12 @@ void	test_write()
 	const char *basic = "a\nb\nc";
 	const char *max_length = get_specified_length_str(512);
 	const char *empty = "";
+	const char *null_char_in_the_middle = "hoge\0hoge";
 
 	put_test_title(title);
 	test_write_case("basic (\"a\\nb\\nc\", len)", basic, strlen(basic));
 	test_write_case("empty (\"\", len)", empty, strlen(empty));
+	test_write_case("null char in the middle", null_char_in_the_middle, 100);
 	test_write_case("count shorter than actual (\"a\\nb\\nc\", len - 2)", basic, strlen(basic) - 2);
 	test_write_case("count longer than actual (\"a\\nb\\nc\", len + 2)", basic, strlen(basic) + 2);
 	test_write_case("max length ('X' * 512, len)", max_length, strlen(max_length));
@@ -378,7 +476,8 @@ void	test_read_fixing_buf(char *case_name, char const *str, size_t count)
 	typedef ssize_t (*t_read)(int, void*, size_t);
 	t_read funcs[2] = {read, ft_read};
 	const char *filenames[2] = {"linux_read_output", "ft_read_output"};
-	char bufs[2][BUFFER_SIZE];
+	// char bufs[2][BUFFER_SIZE];
+	char bufs[2][BUFFER];
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -390,9 +489,11 @@ void	test_read_fixing_buf(char *case_name, char const *str, size_t count)
 		}
 		fcntl(fds[i], F_SETFL, O_NONBLOCK);
 		write(fds[i], str, count);
-		bzero(bufs[i], BUFFER_SIZE);
+		// bzero(bufs[i], BUFFER_SIZE);
+		bzero(bufs[i], BUFFER);
 		errnos[i] = 0;
-		rets[i] = funcs[i](fds[i], bufs[i], BUFFER_SIZE);
+		rets[i] = funcs[i](fds[i], bufs[i], BUFFER);
+		// rets[i] = funcs[i](fds[i], bufs[i], BUFFER_SIZE);
 		errnos[i] = errno;
 		bufs[i][rets[i]] = '\0';
 		close(fds[i]);
@@ -478,10 +579,12 @@ void	test_read()
 	const char *basic = "a\nb\nc";
 	const char *max_length = get_specified_length_str(512);
 	const char *empty = "";
+	const char *null_char_in_the_middle = "hoge\0hoge";
 
 	put_test_title(title);
 	test_read_fixing_buf("basic (\"a\\nb\\nc\", len)", basic, strlen(basic));
 	test_read_fixing_buf("empty (\"\", len)", empty, strlen(empty));
+	test_read_fixing_buf("null char in the middle (\"hoge\\0hoge\", 100)", null_char_in_the_middle, 100);
 	test_read_fixing_buf("count shorter than actual (\"a\\nb\\nc\", len - 2)", basic, strlen(basic) - 2);
 	test_read_fixing_buf("count longer than actual (\"a\\nb\\nc\", len + 2)", basic, strlen(basic) + 2);
 	test_read_fixing_buf("max length ('X' * 512, len)", max_length, strlen(max_length));
@@ -504,6 +607,7 @@ void	test_read()
 	test_read_varying_buf("fd_signed_3", -10000, 0, 100);
 	test_read_varying_buf("fd_signed_4", -1000000000, 1000, 100);
 
+	// all the cases below invoke segv with the original read
 	// test_read_varying_buf("segv_01", 1, -100, 0);
 	// test_read_varying_buf("segv_02", 10, -100, -10);
 	// test_read_varying_buf("segv_03", 100, -500, 50);
@@ -522,18 +626,222 @@ void	test_read()
 	put_test_end(title);
 }
 
+void	test_strdup_case(char *case_name, const char *test_case_str)
+{
+	const char *libc_ret = strdup(test_case_str);
+	const char *asm_ret = ft_strdup(test_case_str);
+	
+	const bool is_ok = (strcmp(libc_ret, asm_ret) == 0);
+
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		;
+	else
+	{
+		putchar('\n');
+		printf("      libc: \"%s%s%s\"\n", BLUE_S, libc_ret, RESET);
+		printf("      asm:  \"%s%s%s\"\n", RED_S, asm_ret, RESET);
+	}
+	putchar('\n');
+}
+
 void	test_strdup(void)
 {
 	const char *title = "strdup";
 
+	const char *basic = "abcde";
+
 	put_test_title(title);
+	test_strdup_case("basic: \"abcde\"", basic);
+	test_strdup_case("empty: \"\"", "");
+	test_strdup_case("null char in the middle: \"hoge\\0hoge\"", "hoge\0hoge");
+	test_strdup_case("max_length: (X * 509)", get_specified_length_str(509));
+	put_test_end(title);
+}
+
+t_list	*ft_lstlast(t_list *lst)
+{
+	if (lst == NULL)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
+int		list_size(t_list *lst)
+{
+	int	count;
+
+	count = 0;
+	while (lst)
+	{
+		lst = lst->next;
+		count++;
+	}
+	return (count);
+}
+
+void	ft_list_add_back(t_list **lst, t_list *new)
+{
+	if (!lst || !new)
+		return ;
+	if (*lst == NULL)
+	{
+		*lst = new;
+		return ;
+	}
+	ft_lstlast(*lst)->next = new;
+}
+
+t_list	*ft_list_new(void *data)
+{
+	t_list		*lst;
+
+	lst = malloc(sizeof(t_list));
+	if (lst == NULL)
+		return (NULL);
+	lst->data = data;
+	lst->next = NULL;
+	return (lst);
+}
+
+void	test_list_size_case(char *case_name, int lst_num)
+{
+	t_list	*list;
+	int		count;
+
+	count = 0;
+	list = NULL;
+	while (count < lst_num)
+	{
+		ft_list_add_back(&list, ft_list_new(&count));
+		count++;
+	}
+
+	const int expected_size = list_size(list);
+	const int asm_size = ft_list_size(list);
+	const bool is_ok = (expected_size == asm_size);
+
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		;
+	else
+	{
+		putchar('\n');
+		printf("      expected: \"%s%d%s\"\n", BLUE_S, expected_size, RESET);
+		printf("      asm:      \"%s%d%s\"\n", RED_S, asm_size, RESET);
+	}
+	putchar('\n');
+}
+
+void	test_list_size(void)
+{
+	const char *title = "list_size";
+
+	put_test_title(title);
+	test_list_size_case("1", 1);
+	test_list_size_case("5", 5);
+	test_list_size_case("0", 0);
+	test_list_size_case("100", 100);
+	put_test_end(title);
+}
+
+void	list_push_front(t_list **begin_list, void *data)
+{
+	t_list	*list_head;
+
+	if (!begin_list || !data)
+		return ;
+	list_head = ft_list_new(data);
+	list_head->next = *begin_list;
+	*begin_list = list_head;
+}
+
+void	test_list_push_front_case(char *case_name, char *str)
+{
+	t_list	*lists[2];
+	int		counts[2];
+	typedef void (*t_list_push_front)(t_list **, void *);
+	t_list_push_front funcs[2] = {list_push_front, ft_list_push_front};
 
 	
+	for (int i = 0; i < 2; i++)
+	{
+		lists[i] = ft_list_new("libasm");
+		ft_list_add_back(&lists[i], ft_list_new("test"));
+		ft_list_add_back(&lists[i], ft_list_new("is"));
+		funcs[i](&lists[i], "going");
+		counts[i] = list_size(lists[i]);
+	}
+	const bool is_count_ok = (counts[0] == counts[1]);
+	bool is_data_ok = true;
+	for (int i = 0; i < counts[0]; i++)
+	{
+		if (strcmp(lists[0]->data, lists[1]->data) != 0)	
+		{
+			is_data_ok = false;
+			break ;
+		}
+	}
+	const bool is_ok = (is_count_ok && is_data_ok);
 
+	printf("  ");
+	put_ok_or_ko(is_ok);
+	putchar(' ');
+	put_color(case_name, PURPLE_N);
+	if (is_ok)
+		;
+	else
+	{
+		printf("\n   ");
+		put_ok_or_ko(is_count_ok);
+		printf(" count\n");
+		if (!is_count_ok)
+		{
+			printf("      expected: \"%s%d%s\"\n", BLUE_S, counts[0], RESET);
+			printf("      asm:      \"%s%d%s\"\n", RED_S, counts[1], RESET);
+		}
+		printf("   ");
+		put_ok_or_ko(is_data_ok);
+		printf(" data\n");
+		if (!is_data_ok)
+		{
+			for (int i = 0; i < counts[0]; i++)
+			{
+				const char *expected_data = lists[0]->data;
+				const char *asm_data = lists[1]->data;
 
+				printf("      %d) ", i);
+				const bool is_this_data_ok = (strcmp(expected_data, asm_data) == 0);
+				put_ok_or_ko(is_this_data_ok);
+				if (!is_this_data_ok)
+				{
+					printf(" expected: \"%s%s%s\",", BLUE_S, lists[0]->data, RESET);
+					printf(" asm:   	\"%s%s%s\"\n", RED_S, lists[1]->data, RESET);
+				}
+				lists[0] = lists[0]->next;
+				lists[1] = lists[1]->next;
+				putchar('\n');
+			}
+		}
+	}
+	putchar('\n');
+}
 
+void	test_list_push_front(void)
+{
+	const char *title = "push_front";
 
-
+	put_test_title(title);
+	test_list_push_front_case("basic (\"a\\nb\\nc\")", "a\nb\nc");
+	test_list_push_front_case("empty", "");
+	test_list_push_front_case("null char in the middle (\"hoge\0hoge\")", "hoge\0hoge");
 	put_test_end(title);
 }
 
@@ -545,4 +853,6 @@ int main(void)
 	test_write();
 	test_read();
 	test_strdup();
+	test_list_size();
+	test_list_push_front();
 }

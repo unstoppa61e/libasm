@@ -2,7 +2,7 @@ section .text
 	global _ft_strcpy
 
 _ft_strcpy:
-	mov rax, rsi		; ret = src
+	push rdi			; var = dst;
 	cld					; clear the direction flag for movsb
 
 .while:
@@ -13,4 +13,5 @@ _ft_strcpy:
 
 .endwhile:
 	mov byte[rdi], 0	; *dst = '\0';
-	ret					; return (ret);
+	pop rax				; retV = dst;
+	ret					; return (retV);
