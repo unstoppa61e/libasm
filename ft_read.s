@@ -1,3 +1,5 @@
+; ssize_t	ft_read(int fildes, void *buf, size_t nbyte);
+
 section .text
 	global _ft_read
 

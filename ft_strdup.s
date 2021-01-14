@@ -5,7 +5,9 @@
 %define arg1 rdi
 %define arg2 rsi
 %define arg3 rdx
-%define retV rax
+%define len rax
+
+default rel
 
 section .text
 	extern _ft_strlen
@@ -15,13 +17,13 @@ section .text
 
 _ft_strdup:
 	push arg1					; var = str;
-	call _ft_strlen				; retV = ft_strlen(str);
+	call _ft_strlen				; len = ft_strlen(str);
 
-	lea arg1, [rel retV + 1]	; arg1 = retV + 1;
-	call _malloc				; retV = malloc(arg1);
+	lea arg1, [len + 1]	; arg1 = len + 1;
+	call _malloc				; len = malloc(arg1);
 
-	mov arg1, retV				; arg1 = retV;
+	mov arg1, len				; arg1 = len;
 	pop arg2					; arg2 = var;
-	call _ft_strcpy				; retV = ft_strcpy(arg1, arg2);
+	call _ft_strcpy				; return_str = ft_strcpy(arg1, arg2);
 
-	ret							; return (retV);
+	ret							; return (return_str);

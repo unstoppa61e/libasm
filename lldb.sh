@@ -1,1 +1,0 @@
-make udemy && lldb udemy

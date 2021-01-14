@@ -1,3 +1,5 @@
+; int		ft_strcmp(const char *s1, const char *s2);
+
 %macro clear_reg 1
 	xor %1, %1
 %endmacro

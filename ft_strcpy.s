@@ -1,3 +1,5 @@
+; char	*ft_strcpy(char *dst, const char *src);
+
 section .text
 	global _ft_strcpy
 
