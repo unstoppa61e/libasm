@@ -1,46 +1,47 @@
-; void	ft_list_push_front(t_list **begin_list, void *data)
+; void ft_list_push_front(t_list **BEGIN_LIST, void *DATA)
 
-; typedef struct	s_list
+; typedef struct      s_list
 ; {
-; 	void			*data;
-; 	struct s_list	*next;
-; }					t_list;
+;     void            *DATA;
+;     struct s_list   *next;
+; }                   t_list;
 
-%define MEMBER_SIZE		8		; (= sizeof(void *)) 
-%define LIST_SIZE		16		; (= sizeof(t_list)) 
-%define arg				rdi
-%define begin_list		rdi
-%define data			rsi
-%define lst				rax
-%define list_head		rbx
+MEMBER_SIZE equ 8  ; (= sizeof(void *)) 
+LIST_SIZE   equ 16 ; (= sizeof(t_list)) 
+
+%define ARG        rdi
+%define BEGIN_LIST rdi
+%define DATA       rsi
+%define LST        rax
+%define LIST_HEAD  r8
 
 section .text
     extern _malloc
     global _ft_list_push_front
 
 _ft_list_push_front:
-    test	begin_list, begin_list
-    jz		.end
+    test    BEGIN_LIST, BEGIN_LIST         ; if (BEGIN_LIST == NULL)
+    jz      .end                           ;     goto .end;
 
-    test	data, data
-    jz		.end
+    test    DATA, DATA                     ; if (DATA == NULL)
+    jz      .end                           ;     goto .end;
 
-    push	begin_list			; var1 = begin_list;
-    push	data				; var2 = data;
+    push    BEGIN_LIST                     ; var1 = BEGIN_LIST;
+    push    DATA                           ; var2 = DATA;
 
-    mov		arg, LIST_SIZE		; begin_list = 16;
-    call	_malloc				; t_list lst = malloc(16);
+    mov     ARG, LIST_SIZE                 ; BEGIN_LIST = 16;
+    call    _malloc                        ; t_list LST = malloc(16);
 
-    pop		data				; data = var2;
-    pop		begin_list			; begin_list = var1;
+    pop     DATA                           ; DATA = var2;
+    pop     BEGIN_LIST                     ; BEGIN_LIST = var1;
 
-    test	lst, lst 			; if (lst
-    jz		.end				;			== NULL) goto .end
+    test    LST, LST                       ; if (LST
+    jz      .end                           ;         == NULL) goto .end;
 
-    mov		[lst], data						; lst->data = data;
-    mov		list_head, [begin_list]			; list_head = *begin_list (= 1st list)
-    mov		[lst + MEMBER_SIZE], list_head	; lst->next = list_head;
-    mov		[begin_list], lst				; *begin_list = lst
+    mov     [LST], DATA                    ; LST->DATA = DATA;
+    mov     LIST_HEAD, [BEGIN_LIST]        ; LIST_HEAD = *BEGIN_LIST; (= 1st list)
+    mov     [LST + MEMBER_SIZE], LIST_HEAD ; LST->next = LIST_HEAD;
+    mov     [BEGIN_LIST], LST              ; *BEGIN_LIST = LST;
 
-.end
+.end:
     ret

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libasm.h                                           :+:      :+:    :+:   */
+/*   libasm_bonus.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 07:25:41 by monoue            #+#    #+#             */
-/*   Updated: 2021/01/15 10:26:10 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/15 10:25:43 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,13 @@ typedef enum	e_colors{
 	COLORS_NUM
 }				t_colors;
 
-size_t	ft_strlen(const char *s);
-char	*ft_strcpy(char *dst, const char *src);
-int		ft_strcmp(const char *s1, const char *s2);
-ssize_t	ft_write(int fildes, const void *buf, size_t nbyte);
-ssize_t	ft_read(int fildes, void *buf, size_t nbyte);
-char	*ft_strdup(const char *s1);
+typedef struct	s_list
+{
+	void 			*data;
+	struct s_list 	*next;
+}				t_list;
+
+int		ft_list_size(t_list *begin_list);
+void	ft_list_push_front(t_list **begin_list, void *data);
 
 #endif

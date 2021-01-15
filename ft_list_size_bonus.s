@@ -1,28 +1,29 @@
-; int ft_list_size(t_list *begin_list);
+; int ft_list_size(t_list *BEGIN_LIST);
 
-; typedef struct	s_list
+; typedef struct      s_list
 ; {
-; 	void			*data;
-; 	struct s_list	*next;
-; }					t_list;
+;     void            *data;
+;     struct s_list   *next;
+; }                   t_list;
 
-%define MEMBER_SIZE 8      ; (sizeof(void *))
-%define count		rax                 
-%define begin_list	rdi
+MEMBER_SIZE     equ 8 ; (sizeof(void *))
+
+%define COUNT       rax                 
+%define BEGIN_LIST  rdi
 
 section .text
     global _ft_list_size
 
 _ft_list_size:
-    xor		count, count				; count = 0;
+    xor     COUNT, COUNT                           ; COUNT = 0;
 
 .while:
-    test	begin_list, begin_list		; if (begin_list == NULL)
-    jz		.endwhile					; 	goto .endwhile
+    test    BEGIN_LIST, BEGIN_LIST                 ; if (BEGIN_LIST == NULL)
+    jz      .endwhile                              ;     goto .endwhile;
 
-    mov		begin_list, [begin_list + MEMBER_SIZE]	; begin_list = begin_list->next
-    inc		count						; count++;
-    jmp		.while						; goto .while
+    mov     BEGIN_LIST, [BEGIN_LIST + MEMBER_SIZE] ; BEGIN_LIST = BEGIN_LIST->next;
+    inc     COUNT                                  ; COUNT++;
+    jmp     .while                                 ; goto .while;
 
-.endwhile
-    ret									; return (count);
+.endwhile:
+    ret                                            ; return (COUNT);

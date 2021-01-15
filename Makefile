@@ -6,29 +6,29 @@
 #    By: monoue <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/23 11:57:28 by monoue            #+#    #+#              #
-#    Updated: 2021/01/14 14:26:29 by monoue           ###   ########.fr        #
+#    Updated: 2021/01/15 10:27:00 by monoue           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= libasm.a
 
+CC		= gcc
 NA		= nasm
-NFLAGS	= -g -Fdwarf -f macho64
+NFLAGS	= -f macho64
+EXEC	= libasm
 
 SRCS	= ft_strlen.s \
 		  ft_strcpy.s \
 		  ft_strcmp.s \
 		  ft_write.s \
 		  ft_read.s \
-		  ft_strdup.s \
-		  ft_list_size_bonus.s \
+		  ft_strdup.s
+
+BONUS	= ft_list_size_bonus.s \
 		  ft_list_push_front_bonus.s
 
 OBJS	= $(SRCS:%.s=%.o)
-
-UNAME	= udemy
-UDEMY	= udemy.s
-UOBJS	= $(UDEMY:%.s=%.o)
+BOBJS	= $(BONUS:%.s=%.o)
 
 all: $(NAME)
 
@@ -38,27 +38,28 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	ar rcs $(NAME) $^
 	ranlib $(NAME)
-	gcc -g main.c libasm.a -o libasm
 
-udemy: $(UOBJS)
-	$(RM) $(UOBJS) $(UNAME)
-	nasm -g -f macho64 $(UDEMY)
-	ld udemy.o -lSystem -o $(UNAME)
-
-strcmp: ft_strcmp.o
-	$(RM) ft_strcmp.o strcmp
-	nasm -g -f macho64 ft_strcmp.s
-	ld ft_strcmp.o -lSystem -o strcmp
+bonus: $(BOBJS)
+	ar rcs $(NAME) $^
+	ranlib $(NAME)
 
 clean:
-	$(RM) $(OBJS) libasm
+	$(RM) $(OBJS) $(BOBJS)
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) $(NAME) $(EXEC)
 
 re: fclean all
 
 test: re
-	./libasm
+	@$(RM) $(EXEC)
+	$(CC) main.c $(NAME) -o $(EXEC)
+	./$(EXEC)
+	@$(RM) linux_read_output linux_write_output ft_read_output ft_write_output
 
-.PHONY: all clean fclean re
+test_bonus: fclean bonus
+	@$(RM) $(EXEC)
+	$(CC) main_bonus.c $(NAME) -o $(EXEC)
+	./$(EXEC)
+
+.PHONY: all clean fclean re test
