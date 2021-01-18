@@ -1,2 +1,7 @@
 a.out
 *.o
+*.dSYM
+ft_write_output
+ft_read_output
+linux_write_output
+linux_read_output
