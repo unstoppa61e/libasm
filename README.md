@@ -10,10 +10,12 @@
 
 1. nasm (= Netwide Assembler) をインストール。例: `brew install nasm`
 2. `nasm -f macho64 (.s ファイル名)`
+
 ※ -f は32 bit か 64 bit かといった format の指定、macho64 は mach-O-64bit を表す。mach とは Mach カーネルを使った Unix のことであり、O はオブジェクトの意。
 3. （.s ファイルを単独でコンパイルしている場合）
 `ld (.o ファイル名) -lSystem`
-※ .c ファイルとコンパイルするならば、 `gcc` で良い ※ `ld` は load の略。これは link をしてくれるコマンド、つまり linker。Unix では linker のことを loader と呼ばれていたので、Linux へもその名称が引き摺られた。また、 `-lSystem` はライブラリサーチパス内にあるライブラリシステム (libSystem.dylib) をリンクするという意味。この libSystem の中に、libc (C 言語標準ライブラリ)、libm (算術ライブラリ)などが含まれている。dylib とは、”Mach-o Dynamic Library” の意。
+
+※ .c ファイルとコンパイルするならば、 `gcc` で良い ※ `ld` は load の略。これは link をしてくれるコマンド、つまり linker。Unix では linker が loader と呼ばれていたため、Linux へもその名称が引き継がれた。また、 `-lSystem` はライブラリサーチパス内にあるライブラリシステム (libSystem.dylib) をリンクするという意味。この libSystem の中に、libc (C 言語標準ライブラリ)、libm (算術ライブラリ)などが含まれている。dylib とは、”Mach-o Dynamic Library” の意。
 
 ### テストコマンド
 
@@ -53,16 +55,6 @@ xor INDEX, INDEX
 - `xor` （= 排他的論理和）命令のオペランドを二つとも同じものにすると、ゼロアウトされる。
 - この方法は、 `mov` で 0 を代入するよりもスピーディーであり、公式に奨励されている。
 
-```
-.while:
-
-    je      .endwhile          ;                     == 0) goto .endwhile
-    inc     INDEX              ; INDEX++;
-    jmp     .while             ; goto .while;
-
-.endwhile:
-    ret                        ; return (INDEX);
-```
 
 ```
 .while:
