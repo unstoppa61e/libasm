@@ -29,9 +29,9 @@
 # define BLUE_S		ESC"[34:1m"
 # define PURPLE_S	ESC"[35:1m"
 # define CYAN_S		ESC"[36:1m"
-# ifndef RESET
-#  define RESET		ESC"[m"
-# endif
+/* # ifndef RESET */
+/* #  define RESET		ESC"[m" */
+/* # endif */
 
 # define OK			1
 # define KO			0
