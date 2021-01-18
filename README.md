@@ -1,4 +1,4 @@
-# libasm
+# :mag: libasm
 42 Tokyo プロジェクト
 ## アセンブラ学習の目的
 
@@ -111,7 +111,7 @@ ret                        ; return (INDEX);
 - `ret`: return
 - `rax` に格納されているものが返り値となる。
 
-## ft_strcpy
+## :white_check_mark: ft_strcpy
 
 ```
 push    DST          ; var = dst;
@@ -147,7 +147,7 @@ pop     rax          ; retV = dst;
 
 - `pop` : スタックに積んであったデータをオペランドに引っ張ってくる。
 
-## ft_strcmp
+## :white_check_mark: ft_strcmp
 
 ```
 %macro CLEAR_REG 1
@@ -167,7 +167,7 @@ jne     .endwhile          ;             != 0) goto .endwhile
 - `jne` : 'jump if not equal' の意。
 - zero フラグが立っていなければ、指定ラベル先へ移動する。
 
-## ft_write
+## :white_check_mark: ft_write
 
 ```
 extern ___error
@@ -207,7 +207,7 @@ fcntl(fds[i], F_SETFL, O_NONBLOCK);
 これにより、read する対象がない場合、入力（？）を待ち続けるのではなく、エラーを返すようになる。
 （以前にあったノンブロッキング処理用のフラグの不具合を解消するために追加されたフラグとのこと）
 
-### ft_strdup
+## :white_check_mark: ft_strdup
 
 ```
 default rel
@@ -221,7 +221,7 @@ lea     ARG1, [LEN + 1] ; ARG1 = LEN + 1;
 - `lea` : Load Effective Address の意。
 - 今回は、計算と `mov` を一行で済ませるために使用している。
 
-### ft_list_size
+## :white_check_mark: ft_list_size
 
 ```
 MEMBER_SIZE     equ 8 ; (sizeof(void *))
@@ -237,11 +237,11 @@ jz      .endwhile                              ;     goto .endwhile;
 - `test` : 対象オペランド同士で、`and` 、つまり AND 演算を行い、結果に従って各フラグを変更する。
 - ある値が 0 かを確認するには、`cmp` と `0` を使うよりもこの方法の方が速いため、推奨されている。
 
-### ft_list_push_front
+## :white_check_mark: ft_list_push_front
 
 → 全て既出の事項によるため、説明は割愛。
 
-## 以下、学習時メモ
+## :pencil: 学習時メモ
 
 （著作権の問題で画像を省いているため、意味が通らない点があるかもしれません。）
 
