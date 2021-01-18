@@ -21,7 +21,7 @@
 
 - `make test` / `make test_bonus` にて、ライブラリを作成し、検証用のメインファイルとコンパイルした後、実行結果を表示します。
 
-## :white_check_mark: ft_strlen
+## :white_check_mark: [ft_strlen](https://github.com/monoue/libasm/blob/master/libasm/ft_strlen.s)
 
 ```
 %define INDEX rax
@@ -103,7 +103,7 @@ ret                        ; return (INDEX);
 - `ret`: return
 - `rax` に格納されているものが返り値となる。
 
-## :white_check_mark: ft_strcpy
+## :white_check_mark: [ft_strcpy](https://github.com/monoue/libasm/blob/master/libasm/ft_strcpy.s)
 
 ```
 push    DST          ; var = dst;
@@ -139,7 +139,7 @@ pop     rax          ; retV = dst;
 
 - `pop` : スタックに積んであったデータをオペランドに引っ張ってくる。
 
-## :white_check_mark: ft_strcmp
+## :white_check_mark: [ft_strcmp](https://github.com/monoue/libasm/blob/master/libasm/ft_strcmp.s)
 
 ```
 %macro CLEAR_REG 1
@@ -159,7 +159,7 @@ jne     .endwhile          ;             != 0) goto .endwhile
 - `jne` : 'jump if not equal' の意。
 - zero フラグが立っていなければ、指定ラベル先へ移動する。
 
-## :white_check_mark: ft_write
+## :white_check_mark: [ft_write](https://github.com/monoue/libasm/blob/master/libasm/ft_write.s)
 
 ```
 extern ___error
@@ -199,7 +199,9 @@ fcntl(fds[i], F_SETFL, O_NONBLOCK);
 これにより、read する対象がない場合、入力（？）を待ち続けるのではなく、エラーを返すようになる。
 （以前にあったノンブロッキング処理用のフラグの不具合を解消するために追加されたフラグとのこと）
 
-## :white_check_mark: ft_strdup
+## :white_check_mark: [ft_read](https://github.com/monoue/libasm/blob/master/libasm/ft_read.s)
+- `ft_write` と同様のため、説明は割愛。
+## :white_check_mark: [ft_strdup](https://github.com/monoue/libasm/blob/master/libasm/ft_strdup.s)
 
 ```
 default rel
@@ -213,7 +215,7 @@ lea     ARG1, [LEN + 1] ; ARG1 = LEN + 1;
 - `lea` : Load Effective Address の意。
 - 今回は、計算と `mov` を一行で済ませるために使用している。
 
-## :white_check_mark: ft_list_size
+## :white_check_mark: [ft_list_size](https://github.com/monoue/libasm/blob/master/libasm/ft_list_size_bonus.s)
 
 ```
 MEMBER_SIZE     equ 8 ; (sizeof(void *))
@@ -229,7 +231,7 @@ jz      .endwhile                              ;     goto .endwhile;
 - `test` : 対象オペランド同士で、`and` 、つまり AND 演算を行い、結果に従って各フラグを変更する。
 - ある値が 0 かを確認するには、`cmp` と `0` を使うよりもこの方法の方が速いため、推奨されている。
 
-## :white_check_mark: ft_list_push_front
+## :white_check_mark: [ft_list_push_front](https://github.com/monoue/libasm/blob/master/libasm/ft_list_push_front_bonus.s)
 
 → 全て既出の事項によるため、説明は割愛。
 
