@@ -19,7 +19,7 @@
 
 - `make test` / `make test_bonus` にて、ライブラリを作成し、検証用のメインファイルとコンパイルした後、実行結果を表示します。
 
-## ft_strlen
+## :white_check_mark: ft_strlen
 
 ```
 %define INDEX rax
@@ -55,7 +55,7 @@ xor INDEX, INDEX
 
 ```
 .while:
-    
+
     je      .endwhile          ;                     == 0) goto .endwhile
     inc     INDEX              ; INDEX++;
     jmp     .while             ; goto .while;
@@ -424,7 +424,7 @@ RSP と RBP 以外のものを、今後の演習で使用する。
 
     1) ホームディレクトリに .lldbinit ファイルを作成
 
-    2) 
+    2)
 
     ```
     settings set target.x86-disassembly-flavor intel
@@ -634,9 +634,9 @@ RSP と RBP 以外のものを、今後の演習で使用する。
 
     ある値が 0 かによって jump する方法は、 `jz` と `je` の２パターンあり、等価である。
 
-    `test eax eax` → `jz` 
+    `test eax eax` → `jz`
 
-    `cmp ecx edx` → `je` 
+    `cmp ecx edx` → `je`
 
     といった感じで、zero フラグを見たいのか、それとも値を見たいのかによって使い分けるのが良い。
 
