@@ -22,7 +22,7 @@ _ft_strdup:
     lea     ARG1, [LEN + 1] ; ARG1 = LEN + 1;
     call    _malloc         ; LEN = malloc(ARG1);
 
-    mov     ARG1, rax       ; ARG1 = LEN;
+    mov     ARG1, rax       ; ARG1 = retV (= mallocked str);
     pop     ARG2            ; ARG2 = var;
     call    _ft_strcpy      ; retV = ft_strcpy(ARG1, ARG2);
 
