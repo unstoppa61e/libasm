@@ -9,8 +9,7 @@
 ### コンパイル
 
 1. nasm (= Netwide Assembler) をインストール。例: `brew install nasm`
-2. `nasm -f macho64 (.s ファイル名)`
-
+2. `nasm -f macho64 (.s ファイル名)`  
 ※ -f は32 bit か 64 bit かといった format の指定、macho64 は mach-O-64bit を表す。mach とは Mach カーネルを使った Unix のことであり、O はオブジェクトの意。  
 3. （.s ファイルを単独でコンパイルしている場合）`ld (.o ファイル名) -lSystem`
 
