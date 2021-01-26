@@ -11,11 +11,11 @@
 1. nasm (= Netwide Assembler) をインストール。例: `brew install nasm`
 2. `nasm -f macho64 (.s ファイル名)`
 
-※ -f は32 bit か 64 bit かといった format の指定、macho64 は mach-O-64bit を表す。mach とは Mach カーネルを使った Unix のことであり、O はオブジェクトの意。
-3. （.s ファイルを単独でコンパイルしている場合）
-`ld (.o ファイル名) -lSystem`
+※ -f は32 bit か 64 bit かといった format の指定、macho64 は mach-O-64bit を表す。mach とは Mach カーネルを使った Unix のことであり、O はオブジェクトの意。  
+3. （.s ファイルを単独でコンパイルしている場合）`ld (.o ファイル名) -lSystem`
 
-※ .c ファイルとコンパイルするならば、 `gcc` で良い ※ `ld` は load の略。これは link をしてくれるコマンド、つまり linker。Unix では linker が loader と呼ばれていたため、Linux へもその名称が引き継がれた。また、 `-lSystem` はライブラリサーチパス内にあるライブラリシステム (libSystem.dylib) をリンクするという意味。この libSystem の中に、libc (C 言語標準ライブラリ)、libm (算術ライブラリ)などが含まれている。dylib とは、”Mach-o Dynamic Library” の意。
+※ .c ファイルとコンパイルするならば、 `gcc` で良い  
+※ `ld` は load の略。これは link をしてくれるコマンド、つまり linker。Unix では linker が loader と呼ばれていたため、Linux へもその名称が引き継がれた。また、 `-lSystem` はライブラリサーチパス内にあるライブラリシステム (libSystem.dylib) をリンクするという意味。この libSystem の中に、libc (C 言語標準ライブラリ)、libm (算術ライブラリ)などが含まれている。dylib とは、”Mach-o Dynamic Library” の意。
 
 ### テストコマンド
 
