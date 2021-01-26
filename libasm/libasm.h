@@ -6,7 +6,7 @@
 /*   By: monoue <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 07:25:41 by monoue            #+#    #+#             */
-/*   Updated: 2021/01/15 10:26:10 by monoue           ###   ########.fr       */
+/*   Updated: 2021/01/27 06:20:18 by monoue           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@
 # define BLUE_S		ESC"[34:1m"
 # define PURPLE_S	ESC"[35:1m"
 # define CYAN_S		ESC"[36:1m"
-/* # ifndef RESET */
-/* #  define RESET		ESC"[m" */
-/* # endif */
+# define RESET		ESC"[m"
 
 # define OK			1
 # define KO			0
