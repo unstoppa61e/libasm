@@ -17,7 +17,7 @@ section .text
 
 _ft_strdup:
     push    ARG1            ; var = str;
-    call    _ft_strlen      ; LEN = ft_strLEN(str);
+    call    _ft_strlen      ; LEN = ft_strlen(str);
 
     lea     ARG1, [LEN + 1] ; ARG1 = LEN + 1;
     call    _malloc         ; LEN = malloc(ARG1);
